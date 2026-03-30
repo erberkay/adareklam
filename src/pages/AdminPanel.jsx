@@ -8,6 +8,7 @@ import QuoteManager from '../components/admin/QuoteManager';
 import ServiceManager from '../components/admin/ServiceManager';
 import UserManager from '../components/admin/UserManager';
 import TestimonialManager from '../components/admin/TestimonialManager';
+import ContactManager from '../components/admin/ContactManager';
 import useSiteSettingsStore from '../store/useSiteSettingsStore';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -19,6 +20,7 @@ const CONTENT_MAP = {
   'hizmetler': ServiceManager,
   'kullanicilar': UserManager,
   'referanslar': TestimonialManager,
+  'mesajlar': ContactManager,
 };
 
 export default function AdminPanel() {

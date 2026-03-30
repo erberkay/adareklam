@@ -116,6 +116,22 @@ export default function ContactPage() {
           </div>
         </section>
       </div>
+
+      {/* Harita */}
+      <section style={{ paddingBottom: '5rem', background: 'var(--color-bg-primary)' }}>
+        <div className="container">
+          <RevealOnScroll variant="fadeUp">
+            <div style={{ borderRadius: '16px', overflow: 'hidden', border: '1px solid var(--glass-border)' }}>
+              <iframe
+                title="Kuşadası Konum"
+                src="https://www.openstreetmap.org/export/embed.html?bbox=27.2336%2C37.8460%2C27.2936%2C37.8660&layer=mapnik&marker=37.8560%2C27.2636"
+                style={{ width: '100%', height: '400px', border: 0, display: 'block', filter: 'invert(1) hue-rotate(200deg) brightness(0.85)' }}
+                loading="lazy"
+              />
+            </div>
+          </RevealOnScroll>
+        </div>
+      </section>
     </PageTransition>
   );
 }

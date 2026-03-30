@@ -52,6 +52,8 @@ export const DEFAULT_SITE_SETTINGS = {
   },
   aboutText: 'Kuşadası\'nda profesyonel reklam ve fotoğraf hizmetleri sunuyoruz.',
   heroImage: '',
+  heroVideo: '',
+  brands: ['Marka A', 'Marka B', 'Marka C', 'Marka D', 'Marka E', 'Marka F', 'Marka G', 'Marka H'],
   primaryColor: '#c8a45c',
   stats: {
     projectCount: 150,

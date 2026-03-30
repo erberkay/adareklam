@@ -1,9 +1,12 @@
 import RevealOnScroll from '../ui/RevealOnScroll';
+import useSiteSettingsStore from '../../store/useSiteSettingsStore';
 
-const BRANDS = ['Marka A', 'Marka B', 'Marka C', 'Marka D', 'Marka E', 'Marka F', 'Marka G', 'Marka H'];
+const FALLBACK_BRANDS = ['Marka A', 'Marka B', 'Marka C', 'Marka D', 'Marka E', 'Marka F', 'Marka G', 'Marka H'];
 
 export default function BrandsSection() {
-  const doubled = [...BRANDS, ...BRANDS];
+  const brands = useSiteSettingsStore((s) => s.settings.brands);
+  const list = (brands && brands.length > 0) ? brands : FALLBACK_BRANDS;
+  const doubled = [...list, ...list];
   return (
     <section style={{ padding: '3rem 0', background: 'var(--color-bg-tertiary)', borderTop: '1px solid var(--glass-border)', borderBottom: '1px solid var(--glass-border)', overflow: 'hidden' }}>
       <RevealOnScroll variant="fadeUp" style={{ textAlign: 'center', marginBottom: '2rem' }}>

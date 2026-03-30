@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { LayoutDashboard, Settings, ImageIcon, FileText, Briefcase, Users, Star, ChevronLeft, ChevronRight, LogOut, Home } from 'lucide-react';
+import { LayoutDashboard, Settings, ImageIcon, FileText, Briefcase, Users, Star, Mail, ChevronLeft, ChevronRight, LogOut, Home } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { signOut } from 'firebase/auth';
 import { toast } from 'sonner';
@@ -15,6 +15,7 @@ export const ADMIN_TABS = [
   { id: 'hizmetler', label: 'Hizmetler', icon: Briefcase },
   { id: 'kullanicilar', label: 'Kullanıcılar', icon: Users },
   { id: 'referanslar', label: 'Referanslar', icon: Star },
+  { id: 'mesajlar', label: 'Mesajlar', icon: Mail },
 ];
 
 export default function AdminSidebar({ activeTab, setActiveTab }) {

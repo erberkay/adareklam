@@ -30,6 +30,7 @@ export default function HeroSection() {
   };
 
   const heroImg = settings.heroImage || 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=1920&q=80';
+  const heroVideo = settings.heroVideo || '';
 
   return (
     <section
@@ -41,23 +42,38 @@ export default function HeroSection() {
         overflow: 'hidden',
       }}
     >
-      {/* Background image with parallax */}
-      <motion.div
-        style={{
-          position: 'absolute', inset: '-10%',
-          x: reduced ? 0 : springX,
-          y: reduced ? 0 : springY,
-        }}
-      >
-        <motion.img
-          src={heroImg}
-          alt=""
-          initial={{ scale: 1.15, opacity: 0 }}
+      {/* Background: video or image */}
+      {heroVideo ? (
+        <motion.video
+          key={heroVideo}
+          src={heroVideo}
+          autoPlay
+          muted
+          loop
+          playsInline
+          initial={{ scale: 1.05, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 1.5, ease: [0.4, 0, 0.2, 1] }}
-          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
         />
-      </motion.div>
+      ) : (
+        <motion.div
+          style={{
+            position: 'absolute', inset: '-10%',
+            x: reduced ? 0 : springX,
+            y: reduced ? 0 : springY,
+          }}
+        >
+          <motion.img
+            src={heroImg}
+            alt=""
+            initial={{ scale: 1.15, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 1.5, ease: [0.4, 0, 0.2, 1] }}
+            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+          />
+        </motion.div>
+      )}
 
       {/* Gradient overlay */}
       <div style={{

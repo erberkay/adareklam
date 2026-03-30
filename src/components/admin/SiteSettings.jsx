@@ -1,8 +1,9 @@
-import { useEffect } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { toast } from 'sonner';
+import { X, Plus } from 'lucide-react';
 import Button from '../ui/Button';
 import { useUpload } from '../../hooks/useStorage';
 import useSiteSettingsStore from '../../store/useSiteSettingsStore';
@@ -11,16 +12,33 @@ export default function SiteSettings() {
   const { settings } = useSiteSettingsStore();
   const { upload, uploading } = useUpload();
   const { register, handleSubmit, reset, formState: { isSubmitting } } = useForm();
+  const [brands, setBrands] = useState(settings.brands || []);
+  const brandInputRef = useRef(null);
+
+  useEffect(() => {
+    setBrands(settings.brands || []);
+  }, [settings.brands]);
 
   useEffect(() => {
     if (settings) reset({ ...settings, ...settings.socialMedia, ...settings.stats });
   }, [settings, reset]);
+
+  const addBrand = () => {
+    const val = brandInputRef.current?.value?.trim();
+    if (!val) return;
+    setBrands((prev) => [...prev, val]);
+    brandInputRef.current.value = '';
+  };
+
+  const removeBrand = (i) => setBrands((prev) => prev.filter((_, idx) => idx !== i));
 
   const onSubmit = async (data) => {
     const payload = {
       siteName: data.siteName, tagline: data.tagline, phone: data.phone,
       email: data.email, address: data.address, aboutText: data.aboutText,
       primaryColor: data.primaryColor,
+      heroVideo: data.heroVideo || '',
+      brands,
       socialMedia: { instagram: data.instagram || '', facebook: data.facebook || '', youtube: data.youtube || '', whatsapp: data.whatsapp || '' },
       stats: { projectCount: Number(data.projectCount) || 0, clientCount: Number(data.clientCount) || 0, yearExperience: Number(data.yearExperience) || 0, photoCount: Number(data.photoCount) || 0 },
       updatedAt: serverTimestamp(),
@@ -88,6 +106,39 @@ export default function SiteSettings() {
               <FormRow label="Yıl Deneyim" name="yearExperience" type="number" register={register} />
               <FormRow label="Fotoğraf Sayısı" name="photoCount" type="number" register={register} />
             </div>
+          </Section>
+
+          {/* Markalar */}
+          <Section title="Birlikte Çalışılan Markalar">
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '1rem' }}>
+              {brands.map((b, i) => (
+                <span key={i} style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: 'rgba(200,164,92,0.1)', border: '1px solid rgba(200,164,92,0.25)', borderRadius: '50px', padding: '4px 12px', color: 'var(--color-primary)', fontSize: '0.85rem', fontWeight: 500 }}>
+                  {b}
+                  <button type="button" onClick={() => removeBrand(i)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-text-muted)', display: 'flex', padding: 0 }}>
+                    <X size={12} />
+                  </button>
+                </span>
+              ))}
+              {brands.length === 0 && <p style={{ color: 'var(--color-text-muted)', fontSize: '0.85rem' }}>Henüz marka eklenmedi</p>}
+            </div>
+            <div style={{ display: 'flex', gap: '0.75rem' }}>
+              <input
+                ref={brandInputRef}
+                type="text"
+                placeholder="Marka adı girin"
+                onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addBrand())}
+                style={{ flex: 1, background: 'var(--glass-bg)', border: '1px solid var(--glass-border)', borderRadius: '10px', padding: '10px 14px', color: 'var(--color-text-primary)', fontFamily: 'Inter, sans-serif', fontSize: '0.875rem', outline: 'none' }}
+              />
+              <button type="button" onClick={addBrand} style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '10px 16px', borderRadius: '10px', border: '1px solid var(--glass-border)', background: 'transparent', color: 'var(--color-primary)', cursor: 'pointer', fontSize: '0.875rem', fontWeight: 500 }}>
+                <Plus size={16} /> Ekle
+              </button>
+            </div>
+          </Section>
+
+          {/* Video */}
+          <Section title="Hero Video (opsiyonel)">
+            <FormRow label="Video URL (mp4, webm)" name="heroVideo" register={register} />
+            <p style={{ color: 'var(--color-text-muted)', fontSize: '0.75rem', marginTop: '-0.5rem' }}>Video URL girilirse ana sayfada resim yerine video gösterilir.</p>
           </Section>
 
           {/* Görseller */}
