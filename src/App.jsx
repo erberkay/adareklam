@@ -8,6 +8,7 @@ import SmoothScroll from './components/layout/SmoothScroll';
 import Layout from './components/layout/Layout';
 import LoadingScreen from './components/ui/LoadingScreen';
 import CustomCursor from './components/ui/CustomCursor';
+import ErrorBoundary from './components/ui/ErrorBoundary';
 import ProtectedRoute from './routes/ProtectedRoute';
 import AdminRoute from './routes/AdminRoute';
 import { useAuthListener } from './hooks/useAuth';
@@ -75,6 +76,7 @@ function AppInit() {
 
 export default function App() {
   return (
+    <ErrorBoundary>
     <HelmetProvider>
       <BrowserRouter basename="/adareklam">
         <SmoothScroll>
@@ -97,5 +99,6 @@ export default function App() {
         </SmoothScroll>
       </BrowserRouter>
     </HelmetProvider>
+    </ErrorBoundary>
   );
 }
