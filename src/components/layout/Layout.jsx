@@ -13,9 +13,9 @@ export default function Layout({ children }) {
   const progress = useScrollProgress();
   const { pathname } = useLocation();
   const settings = useSiteSettingsStore((s) => s.settings);
-  const isAdminPage = pathname.startsWith('/admin');
+  const isPanelPage = pathname.startsWith('/admin') || pathname.startsWith('/musteri');
 
-  if (isAdminPage) return <>{children}</>;
+  if (isPanelPage) return <>{children}</>;
 
   return (
     <>
