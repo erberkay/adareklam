@@ -76,7 +76,7 @@ function AppInit() {
 export default function App() {
   return (
     <HelmetProvider>
-      <BrowserRouter>
+      <BrowserRouter basename="/adareklam">
         <SmoothScroll>
           <AppInit />
           <CustomCursor />
