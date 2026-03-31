@@ -14,6 +14,7 @@ import AnimatedCounter from '../components/ui/AnimatedCounter';
 import { useCollection, where } from '../hooks/useFirestore';
 import { staggerContainer, staggerItem } from '../lib/animations';
 import { useInView } from 'react-intersection-observer';
+import { useIsMobile } from '../hooks/useMediaQuery';
 
 const TABS = [
   { id: 'dashboard', label: 'Genel Bakış', icon: LayoutDashboard },
@@ -28,6 +29,7 @@ export default function CustomerPanel() {
   const siteName = useSiteSettingsStore((s) => s.settings.siteName);
   const { data: quotes } = useCollection('quotes', [where('userId', '==', user?.uid || '')]);
   const { ref, inView } = useInView({ threshold: 0.2, triggerOnce: true });
+  const isMobile = useIsMobile();
 
   const pending = quotes?.filter((q) => q.status === 'pending').length || 0;
   const total = quotes?.length || 0;
@@ -41,50 +43,88 @@ export default function CustomerPanel() {
   return (
     <PageTransition>
       <Helmet><title>Müşteri Paneli — {siteName}</title></Helmet>
-      <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--color-bg-primary)' }}>
-        {/* Sidebar */}
-        <aside style={{
-          width: '240px', flexShrink: 0,
-          background: 'var(--color-bg-secondary)',
-          borderRight: '1px solid var(--glass-border)',
-          padding: '2rem 1rem',
-          display: 'flex', flexDirection: 'column',
-          position: 'sticky', top: 0, height: '100vh',
-        }}>
-          <div style={{ marginBottom: '2rem', paddingLeft: '0.75rem' }}>
-            <span style={{ fontFamily: 'Sora, sans-serif', fontWeight: 800, fontSize: '1.1rem', background: 'linear-gradient(135deg, var(--color-primary), var(--color-primary-light))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
-              {siteName}
-            </span>
-            <p style={{ color: 'var(--color-text-muted)', fontSize: '0.75rem', marginTop: '4px' }}>Müşteri Paneli</p>
-          </div>
-          <nav style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '4px' }}>
+      <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', minHeight: '100vh', background: 'var(--color-bg-primary)' }}>
+
+        {/* Mobile top tab bar */}
+        {isMobile ? (
+          <div style={{
+            background: 'var(--color-bg-secondary)',
+            borderBottom: '1px solid var(--glass-border)',
+            padding: '0.75rem 1rem',
+            display: 'flex', gap: '4px', overflowX: 'auto',
+            position: 'sticky', top: 0, zIndex: 10,
+          }}>
             {TABS.map(({ id, label, icon: Icon }) => (
-              <motion.button
+              <button
                 key={id}
                 onClick={() => setTab(id)}
-                whileHover={{ x: 4 }}
                 style={{
-                  display: 'flex', alignItems: 'center', gap: '0.75rem',
-                  padding: '10px 12px', borderRadius: '10px', border: 'none',
-                  background: tab === id ? 'rgba(200,164,92,0.1)' : 'transparent',
+                  display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0,
+                  padding: '8px 14px', borderRadius: '50px', border: 'none',
+                  background: tab === id ? 'rgba(200,164,92,0.15)' : 'transparent',
                   color: tab === id ? 'var(--color-primary)' : 'var(--color-text-secondary)',
-                  cursor: 'pointer', fontFamily: 'Inter, sans-serif', fontWeight: 500, fontSize: '0.875rem',
-                  transition: 'all 0.2s ease', textAlign: 'left', width: '100%',
-                  borderLeft: tab === id ? '2px solid var(--color-primary)' : '2px solid transparent',
+                  cursor: 'pointer', fontFamily: 'Inter, sans-serif', fontWeight: 500, fontSize: '0.8rem',
+                  transition: 'all 0.2s ease', whiteSpace: 'nowrap',
                 }}
               >
-                <Icon size={18} />
+                <Icon size={15} />
                 {label}
-              </motion.button>
+              </button>
             ))}
-          </nav>
-          <button onClick={handleLogout} className="btn-ghost" style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', padding: '10px 12px', width: '100%', justifyContent: 'flex-start' }}>
-            <LogOut size={16} /> Çıkış
-          </button>
-        </aside>
+            <button onClick={handleLogout} style={{
+              display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0,
+              padding: '8px 14px', borderRadius: '50px', border: 'none',
+              background: 'transparent', color: 'var(--color-text-muted)',
+              cursor: 'pointer', fontFamily: 'Inter, sans-serif', fontSize: '0.8rem',
+            }}>
+              <LogOut size={15} /> Çıkış
+            </button>
+          </div>
+        ) : (
+          /* Desktop Sidebar */
+          <aside style={{
+            width: '240px', flexShrink: 0,
+            background: 'var(--color-bg-secondary)',
+            borderRight: '1px solid var(--glass-border)',
+            padding: '2rem 1rem',
+            display: 'flex', flexDirection: 'column',
+            position: 'sticky', top: 0, height: '100vh',
+          }}>
+            <div style={{ marginBottom: '2rem', paddingLeft: '0.75rem' }}>
+              <span style={{ fontFamily: 'Sora, sans-serif', fontWeight: 800, fontSize: '1.1rem', background: 'linear-gradient(135deg, var(--color-primary), var(--color-primary-light))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
+                {siteName}
+              </span>
+              <p style={{ color: 'var(--color-text-muted)', fontSize: '0.75rem', marginTop: '4px' }}>Müşteri Paneli</p>
+            </div>
+            <nav style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '4px' }}>
+              {TABS.map(({ id, label, icon: Icon }) => (
+                <motion.button
+                  key={id}
+                  onClick={() => setTab(id)}
+                  whileHover={{ x: 4 }}
+                  style={{
+                    display: 'flex', alignItems: 'center', gap: '0.75rem',
+                    padding: '10px 12px', borderRadius: '10px', border: 'none',
+                    background: tab === id ? 'rgba(200,164,92,0.1)' : 'transparent',
+                    color: tab === id ? 'var(--color-primary)' : 'var(--color-text-secondary)',
+                    cursor: 'pointer', fontFamily: 'Inter, sans-serif', fontWeight: 500, fontSize: '0.875rem',
+                    transition: 'all 0.2s ease', textAlign: 'left', width: '100%',
+                    borderLeft: tab === id ? '2px solid var(--color-primary)' : '2px solid transparent',
+                  }}
+                >
+                  <Icon size={18} />
+                  {label}
+                </motion.button>
+              ))}
+            </nav>
+            <button onClick={handleLogout} className="btn-ghost" style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', padding: '10px 12px', width: '100%', justifyContent: 'flex-start' }}>
+              <LogOut size={16} /> Çıkış
+            </button>
+          </aside>
+        )}
 
         {/* Content */}
-        <main style={{ flex: 1, padding: '2rem', overflowY: 'auto' }}>
+        <main style={{ flex: 1, padding: isMobile ? '1.5rem 1rem' : '2rem', overflowY: 'auto', minWidth: 0 }}>
           {tab === 'dashboard' && (
             <div>
               <h1 style={{ fontFamily: 'Sora, sans-serif', fontWeight: 700, fontSize: '1.75rem', color: 'var(--color-text-primary)', marginBottom: '0.5rem' }}>

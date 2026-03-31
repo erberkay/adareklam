@@ -88,56 +88,65 @@ function ServiceRow({ service: svc, index, user }) {
   const isOdd = index % 2 !== 0;
   const Icon = svc.icon;
 
+  const textBlock = (
+    <RevealOnScroll variant={isOdd ? 'fadeRight' : 'fadeLeft'}>
+      <div>
+        <div style={{
+          width: '56px', height: '56px', borderRadius: '14px',
+          background: 'rgba(200,164,92,0.1)', border: '1px solid rgba(200,164,92,0.2)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.5rem',
+        }}>
+          <Icon size={26} style={{ color: 'var(--color-primary)' }} />
+        </div>
+        <h2 style={{ fontFamily: 'Sora, sans-serif', fontWeight: 700, fontSize: 'clamp(1.5rem, 3vw, 2rem)', color: 'var(--color-text-primary)', marginBottom: '1rem' }}>
+          {svc.title}
+        </h2>
+        <p style={{ color: 'var(--color-text-secondary)', lineHeight: 1.8, marginBottom: '1.5rem' }}>{svc.desc}</p>
+        <ul style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '2rem' }}>
+          {svc.features.map((f) => (
+            <li key={f} style={{
+              padding: '4px 12px', borderRadius: '50px',
+              background: 'rgba(200,164,92,0.1)', border: '1px solid rgba(200,164,92,0.2)',
+              color: 'var(--color-primary)', fontSize: '0.8rem', fontWeight: 500, listStyle: 'none',
+            }}>{f}</li>
+          ))}
+        </ul>
+        <Link
+          to={user ? '/musteri' : '/giris'}
+          className="btn-primary"
+          style={{ textDecoration: 'none', display: 'inline-flex' }}
+        >
+          Teklif Al <ArrowRight size={16} />
+        </Link>
+      </div>
+    </RevealOnScroll>
+  );
+
+  const imageBlock = (
+    <RevealOnScroll variant={isOdd ? 'fadeLeft' : 'fadeRight'}>
+      <div style={{ borderRadius: '20px', overflow: 'hidden', aspectRatio: '4/3' }}>
+        <motion.img
+          src={svc.image}
+          alt={svc.title}
+          whileHover={{ scale: 1.05 }}
+          transition={{ duration: 0.6 }}
+          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+        />
+      </div>
+    </RevealOnScroll>
+  );
+
   return (
     <section className="section-padding" style={{ background: index % 2 === 0 ? 'var(--color-bg-primary)' : 'var(--color-bg-secondary)', borderTop: '1px solid var(--glass-border)' }}>
       <div className="container">
         <div style={{
-          display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+          display: 'grid',
+          gridTemplateColumns: 'repeat(2, 1fr)',
           gap: '4rem', alignItems: 'center',
-          flexDirection: isOdd ? 'row-reverse' : 'row',
-        }}>
-          <RevealOnScroll variant={isOdd ? 'fadeRight' : 'fadeLeft'}>
-            <div style={{ order: isOdd ? 2 : 1 }}>
-              <div style={{
-                width: '56px', height: '56px', borderRadius: '14px',
-                background: 'rgba(200,164,92,0.1)', border: '1px solid rgba(200,164,92,0.2)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.5rem',
-              }}>
-                <Icon size={26} style={{ color: 'var(--color-primary)' }} />
-              </div>
-              <h2 style={{ fontFamily: 'Sora, sans-serif', fontWeight: 700, fontSize: 'clamp(1.5rem, 3vw, 2rem)', color: 'var(--color-text-primary)', marginBottom: '1rem' }}>
-                {svc.title}
-              </h2>
-              <p style={{ color: 'var(--color-text-secondary)', lineHeight: 1.8, marginBottom: '1.5rem' }}>{svc.desc}</p>
-              <ul style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '2rem' }}>
-                {svc.features.map((f) => (
-                  <li key={f} style={{
-                    padding: '4px 12px', borderRadius: '50px',
-                    background: 'rgba(200,164,92,0.1)', border: '1px solid rgba(200,164,92,0.2)',
-                    color: 'var(--color-primary)', fontSize: '0.8rem', fontWeight: 500, listStyle: 'none',
-                  }}>{f}</li>
-                ))}
-              </ul>
-              <Link
-                to={user ? '/musteri' : '/giris'}
-                className="btn-primary"
-                style={{ textDecoration: 'none', display: 'inline-flex' }}
-              >
-                Teklif Al <ArrowRight size={16} />
-              </Link>
-            </div>
-          </RevealOnScroll>
-          <RevealOnScroll variant={isOdd ? 'fadeLeft' : 'fadeRight'}>
-            <div style={{ order: isOdd ? 1 : 2, borderRadius: '20px', overflow: 'hidden', aspectRatio: '4/3' }}>
-              <motion.img
-                src={svc.image}
-                alt={svc.title}
-                whileHover={{ scale: 1.05 }}
-                transition={{ duration: 0.6 }}
-                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-              />
-            </div>
-          </RevealOnScroll>
+        }}
+          className="service-row-grid"
+        >
+          {isOdd ? <>{imageBlock}{textBlock}</> : <>{textBlock}{imageBlock}</>}
         </div>
       </div>
     </section>

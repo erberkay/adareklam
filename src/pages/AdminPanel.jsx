@@ -34,7 +34,7 @@ export default function AdminPanel() {
       <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--color-bg-primary)' }}>
         <AdminSidebar activeTab={activeTab} setActiveTab={setActiveTab} />
         <main style={{ flex: 1, overflowY: 'auto', minWidth: 0 }}>
-          <div style={{ padding: '2.5rem', maxWidth: '1100px' }}>
+          <div style={{ padding: '1.5rem', maxWidth: '1100px' }}>
             <AnimatePresence mode="wait">
               <motion.div
                 key={activeTab}

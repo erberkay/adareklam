@@ -301,4 +301,8 @@ body {
 @media (max-width: 768px) {
   .section-padding { padding: 4rem 0; }
   .container { padding: 0 1rem; }
+  .service-row-grid {
+    grid-template-columns: 1fr !important;
+    gap: 2rem !important;
+  }
 }

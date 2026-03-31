@@ -6,6 +6,7 @@ import { toast } from 'sonner';
 import { auth } from '../../lib/firebase';
 import useUIStore from '../../store/useUIStore';
 import useSiteSettingsStore from '../../store/useSiteSettingsStore';
+import { useIsMobile } from '../../hooks/useMediaQuery';
 
 export const ADMIN_TABS = [
   { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -21,13 +22,15 @@ export const ADMIN_TABS = [
 export default function AdminSidebar({ activeTab, setActiveTab }) {
   const { sidebarCollapsed, toggleSidebarCollapsed } = useUIStore();
   const siteName = useSiteSettingsStore((s) => s.settings.siteName);
+  const isMobile = useIsMobile();
+  const collapsed = sidebarCollapsed || isMobile;
 
   const handleLogout = async () => {
     await signOut(auth);
     toast.success('Çıkış yapıldı');
   };
 
-  const w = sidebarCollapsed ? '72px' : '240px';
+  const w = collapsed ? '64px' : '240px';
 
   return (
     <motion.aside
@@ -38,18 +41,20 @@ export default function AdminSidebar({ activeTab, setActiveTab }) {
         borderRight: '1px solid var(--glass-border)',
         display: 'flex', flexDirection: 'column',
         height: '100vh', position: 'sticky', top: 0,
-        overflow: 'hidden',
+        overflow: 'hidden', zIndex: 5,
       }}
     >
-      <div style={{ padding: '1.5rem 1rem', display: 'flex', alignItems: 'center', justifyContent: sidebarCollapsed ? 'center' : 'space-between', borderBottom: '1px solid var(--glass-border)' }}>
-        {!sidebarCollapsed && (
+      <div style={{ padding: '1rem', display: 'flex', alignItems: 'center', justifyContent: collapsed ? 'center' : 'space-between', borderBottom: '1px solid var(--glass-border)' }}>
+        {!collapsed && (
           <span style={{ fontFamily: 'Sora, sans-serif', fontWeight: 800, fontSize: '1rem', background: 'linear-gradient(135deg, var(--color-primary), var(--color-primary-light))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', whiteSpace: 'nowrap', overflow: 'hidden' }}>
             {siteName}
           </span>
         )}
-        <button onClick={toggleSidebarCollapsed} style={{ background: 'var(--glass-bg)', border: '1px solid var(--glass-border)', borderRadius: '8px', width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'var(--color-text-secondary)', flexShrink: 0 }}>
-          {sidebarCollapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
-        </button>
+        {!isMobile && (
+          <button onClick={toggleSidebarCollapsed} style={{ background: 'var(--glass-bg)', border: '1px solid var(--glass-border)', borderRadius: '8px', width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'var(--color-text-secondary)', flexShrink: 0 }}>
+            {sidebarCollapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
+          </button>
+        )}
       </div>
 
       <nav style={{ flex: 1, padding: '1rem 0.75rem', display: 'flex', flexDirection: 'column', gap: '2px' }}>
@@ -57,8 +62,8 @@ export default function AdminSidebar({ activeTab, setActiveTab }) {
           <motion.button
             key={id}
             onClick={() => setActiveTab(id)}
-            whileHover={{ x: sidebarCollapsed ? 0 : 4 }}
-            title={sidebarCollapsed ? label : undefined}
+            whileHover={{ x: collapsed ? 0 : 4 }}
+            title={collapsed ? label : undefined}
             style={{
               display: 'flex', alignItems: 'center', gap: '0.75rem',
               padding: '10px 12px', borderRadius: '10px', border: 'none',
@@ -67,35 +72,35 @@ export default function AdminSidebar({ activeTab, setActiveTab }) {
               cursor: 'pointer', fontFamily: 'Inter, sans-serif', fontWeight: 500, fontSize: '0.875rem',
               transition: 'all 0.2s ease', textAlign: 'left', width: '100%',
               borderLeft: activeTab === id ? '2px solid var(--color-primary)' : '2px solid transparent',
-              whiteSpace: 'nowrap', overflow: 'hidden', justifyContent: sidebarCollapsed ? 'center' : 'flex-start',
+              whiteSpace: 'nowrap', overflow: 'hidden', justifyContent: collapsed ? 'center' : 'flex-start',
             }}
           >
             <Icon size={18} style={{ flexShrink: 0 }} />
-            {!sidebarCollapsed && label}
+            {!collapsed && label}
           </motion.button>
         ))}
       </nav>
 
       <div style={{ padding: '0.75rem', borderTop: '1px solid var(--glass-border)', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-        <Link to="/" title={sidebarCollapsed ? 'Siteye Dön' : undefined} style={{
+        <Link to="/" title={collapsed ? 'Siteye Dön' : undefined} style={{
           display: 'flex', alignItems: 'center', gap: '0.75rem',
           padding: '10px 12px', borderRadius: '10px',
           color: 'var(--color-text-secondary)', textDecoration: 'none', fontSize: '0.875rem', fontFamily: 'Inter, sans-serif',
-          justifyContent: sidebarCollapsed ? 'center' : 'flex-start',
+          justifyContent: collapsed ? 'center' : 'flex-start',
           transition: 'color 0.2s',
         }}>
           <Home size={18} style={{ flexShrink: 0 }} />
-          {!sidebarCollapsed && 'Siteye Dön'}
+          {!collapsed && 'Siteye Dön'}
         </Link>
-        <button onClick={handleLogout} title={sidebarCollapsed ? 'Çıkış' : undefined} style={{
+        <button onClick={handleLogout} title={collapsed ? 'Çıkış' : undefined} style={{
           display: 'flex', alignItems: 'center', gap: '0.75rem',
           padding: '10px 12px', borderRadius: '10px', border: 'none',
           background: 'transparent', color: 'var(--color-text-secondary)',
           cursor: 'pointer', fontFamily: 'Inter, sans-serif', fontSize: '0.875rem',
-          justifyContent: sidebarCollapsed ? 'center' : 'flex-start',
+          justifyContent: collapsed ? 'center' : 'flex-start',
         }}>
           <LogOut size={18} style={{ flexShrink: 0 }} />
-          {!sidebarCollapsed && 'Çıkış'}
+          {!collapsed && 'Çıkış'}
         </button>
       </div>
     </motion.aside>
