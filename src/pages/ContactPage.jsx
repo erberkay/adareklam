@@ -37,6 +37,12 @@ export default function ContactPage() {
       <Helmet>
         <title>İletişim — {settings.siteName}</title>
         <meta name="description" content="Bizimle iletişime geçin. Kuşadası'nda profesyonel reklam ve fotoğraf hizmetleri için." />
+        <meta property="og:title" content={`İletişim — ${settings.siteName}`} />
+        <meta property="og:description" content="Bizimle iletişime geçin. Kuşadası'nda profesyonel reklam ve fotoğraf hizmetleri için." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://erberkay.github.io/adareklam/iletisim" />
+        {settings.heroImage && <meta property="og:image" content={settings.heroImage} />}
+        <meta name="twitter:card" content="summary_large_image" />
       </Helmet>
 
       <div style={{ paddingTop: '7rem', background: 'var(--color-bg-primary)', minHeight: '100vh' }}>

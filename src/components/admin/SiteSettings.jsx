@@ -34,8 +34,8 @@ export default function SiteSettings() {
 
   const onSubmit = async (data) => {
     const payload = {
-      siteName: data.siteName, tagline: data.tagline, phone: data.phone,
-      email: data.email, address: data.address, aboutText: data.aboutText,
+      siteName: data.siteName, tagline: data.tagline, heroSubtitle: data.heroSubtitle || '',
+      phone: data.phone, email: data.email, address: data.address, aboutText: data.aboutText,
       primaryColor: data.primaryColor,
       heroVideo: data.heroVideo || '',
       brands,
@@ -72,6 +72,7 @@ export default function SiteSettings() {
           <Section title="Genel Bilgiler">
             <FormRow label="Site Adı" name="siteName" register={register} />
             <FormRow label="Tagline" name="tagline" register={register} />
+            <FormRow label="Hero Alt Yazısı" name="heroSubtitle" register={register} multiline />
             <FormRow label="Hakkımızda Metni" name="aboutText" register={register} multiline />
           </Section>
 

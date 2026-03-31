@@ -7,11 +7,18 @@ import useSiteSettingsStore from '../store/useSiteSettingsStore';
 
 export default function AboutPage() {
   const settings = useSiteSettingsStore((s) => s.settings);
+  const desc = settings.aboutText || `${settings.siteName} hakkında bilgi edinin. Kuşadası'nda profesyonel reklam ve fotoğraf hizmetleri.`;
   return (
     <PageTransition>
       <Helmet>
         <title>Hakkımızda — {settings.siteName}</title>
-        <meta name="description" content={`${settings.siteName} hakkında bilgi edinin.`} />
+        <meta name="description" content={desc} />
+        <meta property="og:title" content={`Hakkımızda — ${settings.siteName}`} />
+        <meta property="og:description" content={desc} />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://erberkay.github.io/adareklam/hakkimizda" />
+        {settings.heroImage && <meta property="og:image" content={settings.heroImage} />}
+        <meta name="twitter:card" content="summary_large_image" />
       </Helmet>
 
       <div style={{ paddingTop: '7rem', background: 'var(--color-bg-primary)' }}>

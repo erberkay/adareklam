@@ -19,7 +19,7 @@ export const ADMIN_TABS = [
   { id: 'mesajlar', label: 'Mesajlar', icon: Mail },
 ];
 
-export default function AdminSidebar({ activeTab, setActiveTab }) {
+export default function AdminSidebar({ activeTab, setActiveTab, unreadCount = 0 }) {
   const { sidebarCollapsed, toggleSidebarCollapsed } = useUIStore();
   const siteName = useSiteSettingsStore((s) => s.settings.siteName);
   const isMobile = useIsMobile();
@@ -73,10 +73,19 @@ export default function AdminSidebar({ activeTab, setActiveTab }) {
               transition: 'all 0.2s ease', textAlign: 'left', width: '100%',
               borderLeft: activeTab === id ? '2px solid var(--color-primary)' : '2px solid transparent',
               whiteSpace: 'nowrap', overflow: 'hidden', justifyContent: collapsed ? 'center' : 'flex-start',
+              position: 'relative',
             }}
           >
             <Icon size={18} style={{ flexShrink: 0 }} />
             {!collapsed && label}
+            {!collapsed && id === 'mesajlar' && unreadCount > 0 && (
+              <span style={{ marginLeft: 'auto', background: 'var(--color-warning)', color: '#000', borderRadius: '50px', padding: '1px 7px', fontSize: '0.7rem', fontWeight: 700, lineHeight: 1.5 }}>
+                {unreadCount}
+              </span>
+            )}
+            {collapsed && id === 'mesajlar' && unreadCount > 0 && (
+              <span style={{ position: 'absolute', top: '6px', right: '6px', width: '8px', height: '8px', borderRadius: '50%', background: 'var(--color-warning)' }} />
+            )}
           </motion.button>
         ))}
       </nav>

@@ -10,12 +10,22 @@ import CTASection from '../components/home/CTASection';
 import useSiteSettingsStore from '../store/useSiteSettingsStore';
 
 export default function HomePage() {
-  const siteName = useSiteSettingsStore((s) => s.settings.siteName);
+  const settings = useSiteSettingsStore((s) => s.settings);
+  const siteName = settings.siteName;
+  const desc = "Kuşadası'nın önde gelen reklam ve fotoğraf ajansı. Profesyonel fotoğraf çekimi, web tasarımı ve sosyal medya yönetimi.";
   return (
     <PageTransition>
       <Helmet>
         <title>{siteName} — Kuşadası Reklam & Fotoğraf Ajansı</title>
-        <meta name="description" content="Kuşadası'nın önde gelen reklam ve fotoğraf ajansı. Profesyonel fotoğraf çekimi, web tasarımı ve sosyal medya yönetimi." />
+        <meta name="description" content={desc} />
+        <meta property="og:title" content={`${siteName} — Kuşadası Reklam & Fotoğraf Ajansı`} />
+        <meta property="og:description" content={desc} />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://erberkay.github.io/adareklam/" />
+        {settings.heroImage && <meta property="og:image" content={settings.heroImage} />}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={`${siteName} — Kuşadası Reklam & Fotoğraf Ajansı`} />
+        <meta name="twitter:description" content={desc} />
       </Helmet>
       <HeroSection />
       <ServicesSection />

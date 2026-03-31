@@ -11,4 +11,15 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('/firebase/')) return 'vendor-firebase';
+          if (id.includes('framer-motion') || id.includes('framesync') || id.includes('popmotion')) return 'vendor-motion';
+          if (id.includes('/gsap/')) return 'vendor-gsap';
+        },
+      },
+    },
+  },
 })

@@ -53,6 +53,7 @@ export const DEFAULT_SITE_SETTINGS = {
   aboutText: 'Kuşadası\'nda profesyonel reklam ve fotoğraf hizmetleri sunuyoruz.',
   heroImage: '',
   heroVideo: '',
+  heroSubtitle: 'Profesyonel fotoğraf çekimi, reklam tasarımı ve dijital pazarlama çözümleriyle markanızı bir adım öne taşıyoruz.',
   brands: ['Marka A', 'Marka B', 'Marka C', 'Marka D', 'Marka E', 'Marka F', 'Marka G', 'Marka H'],
   primaryColor: '#c8a45c',
   stats: {

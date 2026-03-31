@@ -11,6 +11,7 @@ import TestimonialManager from '../components/admin/TestimonialManager';
 import ContactManager from '../components/admin/ContactManager';
 import useSiteSettingsStore from '../store/useSiteSettingsStore';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useCollection, where } from '../hooks/useFirestore';
 
 const CONTENT_MAP = {
   'dashboard': AdminDashboard,
@@ -27,12 +28,14 @@ export default function AdminPanel() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const siteName = useSiteSettingsStore((s) => s.settings.siteName);
   const ActiveComponent = CONTENT_MAP[activeTab] || AdminDashboard;
+  const { data: unreadContacts } = useCollection('contacts', [where('isRead', '==', false)]);
+  const unreadCount = unreadContacts?.length || 0;
 
   return (
     <>
       <Helmet><title>Admin Paneli — {siteName}</title></Helmet>
       <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--color-bg-primary)' }}>
-        <AdminSidebar activeTab={activeTab} setActiveTab={setActiveTab} />
+        <AdminSidebar activeTab={activeTab} setActiveTab={setActiveTab} unreadCount={unreadCount} />
         <main style={{ flex: 1, overflowY: 'auto', minWidth: 0 }}>
           <div style={{ padding: '1.5rem', maxWidth: '1100px' }}>
             <AnimatePresence mode="wait">

@@ -1,13 +1,20 @@
 import { Helmet } from 'react-helmet-async';
-import { Camera, Megaphone, Globe, AtSign, Package, Clapperboard, ArrowRight } from 'lucide-react';
+import { Camera, Megaphone, Globe, AtSign, Package, Clapperboard, ArrowRight, Briefcase, ImageIcon, Star } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import PageTransition from '../components/layout/PageTransition';
 import RevealOnScroll from '../components/ui/RevealOnScroll';
 import useSiteSettingsStore from '../store/useSiteSettingsStore';
 import { motion } from 'framer-motion';
 import useAuthStore from '../store/useAuthStore';
+import { useCollection, orderBy, where } from '../hooks/useFirestore';
 
-const SERVICES = [
+const ICON_MAP = {
+  camera: Camera, package: Package, globe: Globe, megaphone: Megaphone,
+  'at-sign': AtSign, atSign: AtSign, at_sign: AtSign, clapperboard: Clapperboard,
+  briefcase: Briefcase, image: ImageIcon, star: Star, default: Camera,
+};
+
+const FALLBACK_SERVICES = [
   {
     icon: Camera, title: 'Profesyonel Fotoğraf Çekimi',
     desc: 'Düğün, moda, portre veya kurumsal fotoğraf çekimlerinde yaratıcı vizyon ve teknik mükemmellik bir araya geliyor.',
@@ -46,15 +53,42 @@ const SERVICES = [
   },
 ];
 
+const FALLBACK_IMAGES = [
+  'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=800&q=80',
+  'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&q=80',
+  'https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?w=800&q=80',
+  'https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=800&q=80',
+  'https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=800&q=80',
+  'https://images.unsplash.com/photo-1485846234645-a62644f84728?w=800&q=80',
+];
+
 export default function ServicesPage() {
-  const siteName = useSiteSettingsStore((s) => s.settings.siteName);
+  const settings = useSiteSettingsStore((s) => s.settings);
+  const siteName = settings.siteName;
   const { user } = useAuthStore();
+  const { data: firestoreServices, loading } = useCollection('services', [where('isActive', '==', true), orderBy('order', 'asc')]);
+
+  const services = (!loading && firestoreServices?.length)
+    ? firestoreServices.map((s, i) => ({
+        icon: ICON_MAP[s.icon] || ICON_MAP.default,
+        title: s.title,
+        desc: s.description || s.longDescription || '',
+        features: s.features || [],
+        image: s.image || FALLBACK_IMAGES[i % FALLBACK_IMAGES.length],
+      }))
+    : FALLBACK_SERVICES;
 
   return (
     <PageTransition>
       <Helmet>
         <title>Hizmetler — {siteName}</title>
         <meta name="description" content="Profesyonel fotoğraf çekimi, web tasarımı, reklam ve sosyal medya yönetimi hizmetlerimizi keşfedin." />
+        <meta property="og:title" content={`Hizmetler — ${siteName}`} />
+        <meta property="og:description" content="Profesyonel fotoğraf çekimi, web tasarımı, reklam ve sosyal medya yönetimi hizmetlerimizi keşfedin." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://erberkay.github.io/adareklam/hizmetler" />
+        {settings.heroImage && <meta property="og:image" content={settings.heroImage} />}
+        <meta name="twitter:card" content="summary_large_image" />
       </Helmet>
 
       <div style={{ paddingTop: '7rem', background: 'var(--color-bg-primary)' }}>
@@ -76,7 +110,7 @@ export default function ServicesPage() {
         </section>
 
         {/* Services list */}
-        {SERVICES.map((svc, i) => (
+        {services.map((svc, i) => (
           <ServiceRow key={i} service={svc} index={i} user={user} />
         ))}
       </div>

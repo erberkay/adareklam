@@ -1,5 +1,8 @@
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import { motion, useMotionValue, useTransform, useSpring } from 'framer-motion';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+gsap.registerPlugin(ScrollTrigger);
 import { ChevronDown, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import TextReveal from '../ui/TextReveal';
@@ -29,8 +32,27 @@ export default function HeroSection() {
     mouseY.set(((e.clientY - rect.top) / rect.height) * 2 - 1);
   };
 
+  const gsapBgRef = useRef(null);
   const heroImg = settings.heroImage || 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=1920&q=80';
   const heroVideo = settings.heroVideo || '';
+  const heroSubtitle = settings.heroSubtitle || 'Profesyonel fotoğraf çekimi, reklam tasarımı ve dijital pazarlama çözümleriyle markanızı bir adım öne taşıyoruz.';
+
+  useEffect(() => {
+    if (reduced || heroVideo) return;
+    const ctx = gsap.context(() => {
+      gsap.to(gsapBgRef.current, {
+        yPercent: 30,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: heroRef.current,
+          start: 'top top',
+          end: 'bottom top',
+          scrub: 1.5,
+        },
+      });
+    });
+    return () => ctx.revert();
+  }, [reduced, heroVideo]);
 
   return (
     <section
@@ -57,22 +79,24 @@ export default function HeroSection() {
           style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
         />
       ) : (
-        <motion.div
-          style={{
-            position: 'absolute', inset: '-10%',
-            x: reduced ? 0 : springX,
-            y: reduced ? 0 : springY,
-          }}
-        >
-          <motion.img
-            src={heroImg}
-            alt=""
-            initial={{ scale: 1.15, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 1.5, ease: [0.4, 0, 0.2, 1] }}
-            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-          />
-        </motion.div>
+        <div ref={gsapBgRef} style={{ position: 'absolute', inset: '-15%' }}>
+          <motion.div
+            style={{
+              width: '100%', height: '100%',
+              x: reduced ? 0 : springX,
+              y: reduced ? 0 : springY,
+            }}
+          >
+            <motion.img
+              src={heroImg}
+              alt=""
+              initial={{ scale: 1.15, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 1.5, ease: [0.4, 0, 0.2, 1] }}
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            />
+          </motion.div>
+        </div>
       )}
 
       {/* Gradient overlay */}
@@ -119,8 +143,7 @@ export default function HeroSection() {
             lineHeight: 1.7,
           }}
         >
-          Profesyonel fotoğraf çekimi, reklam tasarımı ve dijital pazarlama çözümleriyle
-          markanızı bir adım öne taşıyoruz.
+          {heroSubtitle}
         </motion.p>
 
         {/* CTA Buttons */}

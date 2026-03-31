@@ -14,9 +14,10 @@ const DEMO_TESTIMONIALS = [
 ];
 
 export default function TestimonialsSection() {
+  const { data: firestoreItems, loading } = useCollection('testimonials');
+  const published = firestoreItems?.filter((t) => t.isPublished !== false) || [];
+  const items = loading ? [] : (published.length ? published : DEMO_TESTIMONIALS);
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [Autoplay({ delay: 5000 })]);
-  const { data: testimonials } = useCollection('testimonials');
-  const items = testimonials?.length ? testimonials : DEMO_TESTIMONIALS;
 
   const prev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
   const next = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
