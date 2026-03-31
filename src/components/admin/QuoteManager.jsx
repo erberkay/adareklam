@@ -38,7 +38,7 @@ export default function QuoteManager() {
       {/* Filter */}
       <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '1.5rem' }}>
         {['all', ...Object.keys(QUOTE_STATUSES)].map((s) => (
-          <button key={s} onClick={() => setFilter(s)} style={{ padding: '6px 16px', borderRadius: '50px', border: '1px solid var(--glass-border)', background: filter === s ? 'var(--color-primary)' : 'var(--glass-bg)', color: filter === s ? '#000' : 'var(--color-text-secondary)', cursor: 'pointer', fontSize: '0.8rem', fontWeight: 600 }}>
+          <button key={s} onClick={() => setFilter(s)} style={{ padding: '8px 18px', borderRadius: '50px', border: '1px solid var(--glass-border)', background: filter === s ? 'var(--color-primary)' : 'var(--glass-bg)', color: filter === s ? '#000' : 'var(--color-text-secondary)', cursor: 'pointer', fontSize: '0.8rem', fontWeight: 600 }}>
             {s === 'all' ? 'Tümü' : QUOTE_STATUSES[s].label}
           </button>
         ))}
@@ -54,7 +54,7 @@ export default function QuoteManager() {
                 <div style={{ flex: 1 }}>
                   <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap' }}>
                     <p style={{ fontFamily: 'Sora, sans-serif', fontWeight: 700, color: 'var(--color-text-primary)', fontSize: '0.9rem' }}>{q.userName || q.userEmail}</p>
-                    <span style={{ padding: '2px 10px', borderRadius: '50px', background: `${sc}20`, color: sc, fontSize: '0.75rem', fontWeight: 600 }}>{QUOTE_STATUSES[q.status]?.label}</span>
+                    <span style={{ padding: '4px 12px', borderRadius: '50px', background: `${sc}20`, color: sc, fontSize: '0.75rem', fontWeight: 600 }}>{QUOTE_STATUSES[q.status]?.label}</span>
                     {q.quotedPrice > 0 && <span style={{ color: 'var(--color-primary)', fontSize: '0.8rem', fontWeight: 600 }}>₺{q.quotedPrice.toLocaleString('tr-TR')}</span>}
                   </div>
                   <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.8rem', marginTop: '2px' }}>{svcLabel} • {q.budget}</p>
@@ -79,7 +79,7 @@ export default function QuoteManager() {
 
             <div>
               <label style={{ color: 'var(--color-text-muted)', fontSize: '0.8rem', display: 'block', marginBottom: '0.5rem' }}>Durum</label>
-              <select value={status} onChange={(e) => setStatus(e.target.value)} style={{ width: '100%', padding: '10px', background: 'var(--glass-bg)', border: '1px solid var(--glass-border)', borderRadius: '8px', color: 'var(--color-text-primary)', fontFamily: 'Inter, sans-serif' }}>
+              <select value={status} onChange={(e) => setStatus(e.target.value)} style={{ width: '100%', padding: '12px', background: 'var(--glass-bg)', border: '1px solid var(--glass-border)', borderRadius: '8px', color: 'var(--color-text-primary)', fontFamily: 'Inter, sans-serif' }}>
                 {Object.entries(QUOTE_STATUSES).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}
               </select>
             </div>

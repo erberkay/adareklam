@@ -18,7 +18,7 @@ export default function UserManager() {
       {loading ? <p style={{ color: 'var(--color-text-muted)' }}>Yükleniyor...</p> : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
           {users?.map((user) => (
-            <motion.div key={user.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="glass-card" style={{ padding: '1rem 1.5rem', display: 'flex', gap: '1rem', alignItems: 'center' }}>
+            <motion.div key={user.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="glass-card" style={{ padding: '1.25rem 1.5rem', display: 'flex', gap: '1rem', alignItems: 'center' }}>
               <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: user.role === 'admin' ? 'var(--color-primary)' : 'var(--color-bg-tertiary)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                 {user.role === 'admin' ? <Shield size={18} style={{ color: '#000' }} /> : <User size={18} style={{ color: 'var(--color-text-secondary)' }} />}
               </div>
@@ -28,7 +28,7 @@ export default function UserManager() {
               </div>
               <button
                 onClick={() => toggleRole(user)}
-                style={{ padding: '6px 16px', borderRadius: '50px', border: '1px solid var(--glass-border)', background: user.role === 'admin' ? 'rgba(200,164,92,0.1)' : 'var(--glass-bg)', color: user.role === 'admin' ? 'var(--color-primary)' : 'var(--color-text-secondary)', cursor: 'pointer', fontSize: '0.8rem', fontWeight: 600, transition: 'all 0.2s' }}
+                style={{ padding: '8px 18px', borderRadius: '50px', border: '1px solid var(--glass-border)', background: user.role === 'admin' ? 'rgba(200,164,92,0.1)' : 'var(--glass-bg)', color: user.role === 'admin' ? 'var(--color-primary)' : 'var(--color-text-secondary)', cursor: 'pointer', fontSize: '0.8rem', fontWeight: 600, transition: 'all 0.2s' }}
               >
                 {user.role === 'admin' ? 'Admin' : 'Müşteri'}
               </button>

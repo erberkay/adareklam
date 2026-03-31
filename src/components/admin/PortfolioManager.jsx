@@ -66,15 +66,15 @@ export default function PortfolioManager() {
               {item.thumbnail && <img src={item.thumbnail} alt={item.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />}
               {!item.isPublished && <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><span style={{ color: '#fff', fontSize: '0.75rem', fontWeight: 600 }}>Yayında Değil</span></div>}
             </div>
-            <div style={{ padding: '1rem' }}>
+            <div style={{ padding: '1.25rem' }}>
               <p style={{ fontFamily: 'Sora, sans-serif', fontWeight: 700, color: 'var(--color-text-primary)', fontSize: '0.9rem', marginBottom: '4px' }}>{item.title}</p>
               <p style={{ color: 'var(--color-primary)', fontSize: '0.75rem' }}>{item.category?.replace(/-/g, ' ')}</p>
-              <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.75rem' }}>
-                <button onClick={() => openEdit(item)} style={{ flex: 1, padding: '6px', borderRadius: '8px', border: '1px solid var(--glass-border)', background: 'transparent', color: 'var(--color-text-secondary)', cursor: 'pointer', fontSize: '0.8rem' }}>Düzenle</button>
-                <button onClick={() => togglePublish(item)} style={{ padding: '6px 10px', borderRadius: '8px', border: '1px solid var(--glass-border)', background: 'transparent', color: item.isPublished ? 'var(--color-success)' : 'var(--color-text-muted)', cursor: 'pointer' }}>
+              <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.875rem' }}>
+                <button onClick={() => openEdit(item)} style={{ flex: 1, padding: '8px', borderRadius: '8px', border: '1px solid var(--glass-border)', background: 'transparent', color: 'var(--color-text-secondary)', cursor: 'pointer', fontSize: '0.8rem' }}>Düzenle</button>
+                <button onClick={() => togglePublish(item)} style={{ padding: '8px 12px', borderRadius: '8px', border: '1px solid var(--glass-border)', background: 'transparent', color: item.isPublished ? 'var(--color-success)' : 'var(--color-text-muted)', cursor: 'pointer' }}>
                   {item.isPublished ? <Eye size={14} /> : <EyeOff size={14} />}
                 </button>
-                <button onClick={() => handleDelete(item.id)} style={{ padding: '6px 10px', borderRadius: '8px', border: '1px solid var(--glass-border)', background: 'transparent', color: 'var(--color-error)', cursor: 'pointer' }}>
+                <button onClick={() => handleDelete(item.id)} style={{ padding: '8px 12px', borderRadius: '8px', border: '1px solid var(--glass-border)', background: 'transparent', color: 'var(--color-error)', cursor: 'pointer' }}>
                   <Trash2 size={14} />
                 </button>
               </div>
@@ -90,7 +90,7 @@ export default function PortfolioManager() {
           <div className="floating-label-group"><textarea placeholder=" " rows={3} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} /><label>Açıklama</label><span className="floating-underline" /></div>
           <div>
             <label style={{ color: 'var(--color-text-muted)', fontSize: '0.8rem', display: 'block', marginBottom: '0.5rem' }}>Kategori</label>
-            <select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} style={{ width: '100%', padding: '10px', background: 'var(--glass-bg)', border: '1px solid var(--glass-border)', borderRadius: '8px', color: 'var(--color-text-primary)', fontFamily: 'Inter, sans-serif' }}>
+            <select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} style={{ width: '100%', padding: '12px', background: 'var(--glass-bg)', border: '1px solid var(--glass-border)', borderRadius: '8px', color: 'var(--color-text-primary)', fontFamily: 'Inter, sans-serif' }}>
               <option value="">Seçin</option>
               {PORTFOLIO_CATEGORIES.slice(1).map((c) => <option key={c.id} value={c.id}>{c.label}</option>)}
             </select>

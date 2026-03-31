@@ -54,11 +54,11 @@ export default function TestimonialManager() {
               <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.85rem', fontStyle: 'italic' }}>"{t.text?.slice(0, 100)}{t.text?.length > 100 ? '...' : ''}"</p>
             </div>
             <div style={{ display: 'flex', gap: '0.5rem' }}>
-              <button onClick={() => openEdit(t)} style={{ padding: '6px 12px', borderRadius: '8px', border: '1px solid var(--glass-border)', background: 'transparent', color: 'var(--color-text-secondary)', cursor: 'pointer', fontSize: '0.8rem' }}>Düzenle</button>
-              <button onClick={() => togglePublish(t)} style={{ padding: '6px 10px', borderRadius: '8px', border: '1px solid var(--glass-border)', background: 'transparent', color: t.isPublished ? 'var(--color-success)' : 'var(--color-text-muted)', cursor: 'pointer' }}>
+              <button onClick={() => openEdit(t)} style={{ padding: '8px 14px', borderRadius: '8px', border: '1px solid var(--glass-border)', background: 'transparent', color: 'var(--color-text-secondary)', cursor: 'pointer', fontSize: '0.8rem' }}>Düzenle</button>
+              <button onClick={() => togglePublish(t)} style={{ padding: '8px 12px', borderRadius: '8px', border: '1px solid var(--glass-border)', background: 'transparent', color: t.isPublished ? 'var(--color-success)' : 'var(--color-text-muted)', cursor: 'pointer' }}>
                 {t.isPublished ? <Eye size={14} /> : <EyeOff size={14} />}
               </button>
-              <button onClick={() => handleDelete(t.id)} style={{ padding: '6px 10px', borderRadius: '8px', border: '1px solid var(--glass-border)', background: 'transparent', color: 'var(--color-error)', cursor: 'pointer' }}>
+              <button onClick={() => handleDelete(t.id)} style={{ padding: '8px 12px', borderRadius: '8px', border: '1px solid var(--glass-border)', background: 'transparent', color: 'var(--color-error)', cursor: 'pointer' }}>
                 <Trash2 size={14} />
               </button>
             </div>
