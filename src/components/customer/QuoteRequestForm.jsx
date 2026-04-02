@@ -29,35 +29,48 @@ export default function QuoteRequestForm({ onSuccess }) {
   const { user } = useAuthStore();
   const { upload, uploading, progress } = useUpload();
 
-  const { register, handleSubmit, watch, setValue, formState: { errors } } = useForm({
+  const { register, handleSubmit, watch, setValue, trigger, formState: { errors, isSubmitting } } = useForm({
     resolver: zodResolver(schema),
     defaultValues: { serviceType: '', projectDescription: '', budget: '' },
   });
+
+  const STEP_FIELDS = [['serviceType'], ['projectDescription'], ['budget'], []];
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: { 'image/*': [] },
     onDrop: (accepted) => setFiles((f) => [...f, ...accepted].slice(0, 5)),
   });
 
-  const next = () => setStep((s) => Math.min(s + 1, 3));
+  const next = async () => {
+    const fields = STEP_FIELDS[step];
+    if (fields.length) {
+      const valid = await trigger(fields);
+      if (!valid) return;
+    }
+    setStep((s) => Math.min(s + 1, 3));
+  };
   const prev = () => setStep((s) => Math.max(s - 1, 0));
 
   const onSubmit = async (data) => {
-    let attachments = [];
-    if (files.length) {
-      for (const f of files) {
-        const url = await upload(f, `quotes/${user.uid}`);
-        attachments.push(url);
+    try {
+      let attachments = [];
+      if (files.length) {
+        for (const f of files) {
+          const url = await upload(f, `quotes/${user.uid}`);
+          attachments.push(url);
+        }
       }
+      await addDoc(collection(db, 'quotes'), {
+        ...data, userId: user.uid, userName: user.displayName || '',
+        userEmail: user.email, attachments,
+        status: 'pending', createdAt: serverTimestamp(), updatedAt: serverTimestamp(),
+      });
+      setSubmitted(true);
+      toast.success('Teklif talebiniz alındı!');
+      onSuccess?.();
+    } catch {
+      toast.error('Gönderim sırasında hata oluştu. Lütfen tekrar deneyin.');
     }
-    await addDoc(collection(db, 'quotes'), {
-      ...data, userId: user.uid, userName: user.displayName || '',
-      userEmail: user.email, attachments,
-      status: 'pending', createdAt: serverTimestamp(), updatedAt: serverTimestamp(),
-    });
-    setSubmitted(true);
-    toast.success('Teklif talebiniz alındı!');
-    onSuccess?.();
   };
 
   if (submitted) {
@@ -183,7 +196,7 @@ export default function QuoteRequestForm({ onSuccess }) {
               İleri <ChevronRight size={16} />
             </button>
           ) : (
-            <Button type="submit" loading={uploading} variant="primary" style={{ marginLeft: 'auto' }}>
+            <Button type="submit" loading={uploading || isSubmitting} variant="primary" style={{ marginLeft: 'auto' }}>
               Talebi Gönder
             </Button>
           )}
