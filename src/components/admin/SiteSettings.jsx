@@ -10,7 +10,8 @@ import useSiteSettingsStore from '../../store/useSiteSettingsStore';
 
 export default function SiteSettings() {
   const { settings } = useSiteSettingsStore();
-  const { upload, uploading } = useUpload();
+  const { upload: uploadLogo, uploading: logoUploading } = useUpload();
+  const { upload: uploadHero, uploading: heroUploading } = useUpload();
   const { register, handleSubmit, reset, formState: { isSubmitting } } = useForm();
   const [brands, setBrands] = useState(settings.brands || []);
   const brandInputRef = useRef(null);
@@ -33,34 +34,46 @@ export default function SiteSettings() {
   const removeBrand = (i) => setBrands((prev) => prev.filter((_, idx) => idx !== i));
 
   const onSubmit = async (data) => {
-    const payload = {
-      siteName: data.siteName, tagline: data.tagline, heroSubtitle: data.heroSubtitle || '',
-      phone: data.phone, email: data.email, address: data.address, aboutText: data.aboutText,
-      primaryColor: data.primaryColor,
-      heroVideo: data.heroVideo || '',
-      brands,
-      socialMedia: { instagram: data.instagram || '', facebook: data.facebook || '', youtube: data.youtube || '', whatsapp: data.whatsapp || '' },
-      stats: { projectCount: Number(data.projectCount) || 0, clientCount: Number(data.clientCount) || 0, yearExperience: Number(data.yearExperience) || 0, photoCount: Number(data.photoCount) || 0 },
-      updatedAt: serverTimestamp(),
-    };
-    await setDoc(doc(db, 'siteSettings', 'config'), payload, { merge: true });
-    toast.success('Site ayarları kaydedildi!');
+    try {
+      const payload = {
+        siteName: data.siteName, tagline: data.tagline, heroSubtitle: data.heroSubtitle || '',
+        phone: data.phone, email: data.email, address: data.address, aboutText: data.aboutText,
+        primaryColor: data.primaryColor,
+        heroVideo: data.heroVideo || '',
+        brands,
+        socialMedia: { instagram: data.instagram || '', facebook: data.facebook || '', youtube: data.youtube || '', whatsapp: data.whatsapp || '' },
+        stats: { projectCount: Number(data.projectCount) || 0, clientCount: Number(data.clientCount) || 0, yearExperience: Number(data.yearExperience) || 0, photoCount: Number(data.photoCount) || 0 },
+        updatedAt: serverTimestamp(),
+      };
+      await setDoc(doc(db, 'siteSettings', 'config'), payload, { merge: true });
+      toast.success('Site ayarları kaydedildi!');
+    } catch (err) {
+      toast.error('Kaydedilemedi: ' + err.message);
+    }
   };
 
   const handleLogoUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    const url = await upload(file, 'site');
-    await setDoc(doc(db, 'siteSettings', 'config'), { logo: url }, { merge: true });
-    toast.success('Logo yüklendi!');
+    try {
+      const url = await uploadLogo(file, 'site');
+      await setDoc(doc(db, 'siteSettings', 'config'), { logo: url }, { merge: true });
+      toast.success('Logo yüklendi!');
+    } catch (err) {
+      toast.error('Logo yüklenemedi: ' + err.message);
+    }
   };
 
   const handleHeroUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    const url = await upload(file, 'site');
-    await setDoc(doc(db, 'siteSettings', 'config'), { heroImage: url }, { merge: true });
-    toast.success('Hero görseli yüklendi!');
+    try {
+      const url = await uploadHero(file, 'site');
+      await setDoc(doc(db, 'siteSettings', 'config'), { heroImage: url }, { merge: true });
+      toast.success('Hero görseli yüklendi!');
+    } catch (err) {
+      toast.error('Görsel yüklenemedi: ' + err.message);
+    }
   };
 
   return (
@@ -147,24 +160,24 @@ export default function SiteSettings() {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '1.5rem' }}>
               <div>
                 <label style={{ display: 'block', color: 'var(--color-text-muted)', fontSize: '0.8rem', marginBottom: '0.5rem' }}>Logo</label>
-                <label style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '8px 16px', borderRadius: '8px', border: '1px solid var(--glass-border)', color: 'var(--color-text-secondary)', cursor: 'pointer', fontSize: '0.85rem' }}>
-                  Yükle
-                  <input type="file" accept="image/*" onChange={handleLogoUpload} style={{ display: 'none' }} />
+                <label style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '8px 16px', borderRadius: '8px', border: '1px solid var(--glass-border)', color: 'var(--color-text-secondary)', cursor: logoUploading ? 'not-allowed' : 'pointer', fontSize: '0.85rem', opacity: logoUploading ? 0.6 : 1 }}>
+                  {logoUploading ? 'Yükleniyor…' : 'Yükle'}
+                  <input type="file" accept="image/*" onChange={handleLogoUpload} style={{ display: 'none' }} disabled={logoUploading} />
                 </label>
                 {settings.logo && <img src={settings.logo} alt="Logo" style={{ height: '40px', marginTop: '0.5rem', objectFit: 'contain' }} />}
               </div>
               <div>
                 <label style={{ display: 'block', color: 'var(--color-text-muted)', fontSize: '0.8rem', marginBottom: '0.5rem' }}>Hero Görseli</label>
-                <label style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '8px 16px', borderRadius: '8px', border: '1px solid var(--glass-border)', color: 'var(--color-text-secondary)', cursor: 'pointer', fontSize: '0.85rem' }}>
-                  Yükle
-                  <input type="file" accept="image/*" onChange={handleHeroUpload} style={{ display: 'none' }} />
+                <label style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '8px 16px', borderRadius: '8px', border: '1px solid var(--glass-border)', color: 'var(--color-text-secondary)', cursor: heroUploading ? 'not-allowed' : 'pointer', fontSize: '0.85rem', opacity: heroUploading ? 0.6 : 1 }}>
+                  {heroUploading ? 'Yükleniyor…' : 'Yükle'}
+                  <input type="file" accept="image/*" onChange={handleHeroUpload} style={{ display: 'none' }} disabled={heroUploading} />
                 </label>
                 {settings.heroImage && <img src={settings.heroImage} alt="Hero" style={{ height: '60px', marginTop: '0.5rem', objectFit: 'cover', borderRadius: '8px' }} />}
               </div>
             </div>
           </Section>
 
-          <Button type="submit" loading={isSubmitting || uploading} variant="primary">
+          <Button type="submit" loading={isSubmitting} variant="primary">
             Kaydet
           </Button>
         </div>
