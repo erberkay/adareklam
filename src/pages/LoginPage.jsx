@@ -30,7 +30,7 @@ export default function LoginPage() {
     setTimeout(() => {
       const role = useAuthStore.getState().userRole;
       navigate(role === 'admin' ? '/admin' : '/musteri');
-    }, 600);
+    }, 200);
   };
 
   const onSubmit = async ({ email, password }) => {

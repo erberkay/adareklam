@@ -15,11 +15,13 @@ export function useAuthListener() {
       if (firebaseUser) {
         setUser(firebaseUser);
         const isAdminEmail = ADMIN_EMAILS.includes(firebaseUser.email);
+        const quickRole = isAdminEmail ? 'admin' : 'customer';
 
-        // Önce email listesinden rolü kesin belirle
-        let role = isAdminEmail ? 'admin' : 'customer';
+        // Rolü ve loading'i hemen set et — redirect beklemeden çalışsın
+        setUserRole(quickRole);
+        setLoading(false);
 
-        // Firestore'dan okumayı dene; başarılı olursa admin-email-olmayan kullanıcılar için Firestore'daki rol geçerli
+        // Firestore senkronizasyonu arka planda
         try {
           const userRef = doc(db, 'users', firebaseUser.uid);
           const snap = await getDoc(userRef);
@@ -30,18 +32,17 @@ export function useAuthListener() {
               displayName: firebaseUser.displayName || '',
               photoURL: firebaseUser.photoURL || '',
               phone: '',
-              role,
+              role: quickRole,
               createdAt: serverTimestamp(),
               lastLogin: serverTimestamp(),
             });
           } else {
-            if (!isAdminEmail) role = snap.data().role || 'customer';
-            await setDoc(userRef, { lastLogin: serverTimestamp(), role }, { merge: true });
+            const firestoreRole = snap.data().role || 'customer';
+            // Admin email değilse Firestore'daki rolü kullan (başka admin tarafından yetkilendirilmiş olabilir)
+            if (!isAdminEmail && firestoreRole !== quickRole) setUserRole(firestoreRole);
+            await setDoc(userRef, { lastLogin: serverTimestamp(), role: isAdminEmail ? 'admin' : firestoreRole }, { merge: true });
           }
-        } catch { /* Firestore erişilemese bile email listesi geçerli */ }
-
-        setUserRole(role);
-        setLoading(false);
+        } catch { /* ignore */ }
       } else {
         clearAuth();
       }
