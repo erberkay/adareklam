@@ -1,23 +1,27 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
-import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, onSnapshot, setDoc, serverTimestamp } from 'firebase/firestore';
 import { auth, db } from '../lib/firebase';
 import useAuthStore from '../store/useAuthStore';
 
 export function useAuthListener() {
   const { setUser, setUserRole, setLoading, clearAuth } = useAuthStore();
+  const roleUnsubRef = useRef(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      // Önceki rol dinleyicisini temizle
+      if (roleUnsubRef.current) { roleUnsubRef.current(); roleUnsubRef.current = null; }
+
       if (firebaseUser) {
         setUser(firebaseUser);
+        const userRef = doc(db, 'users', firebaseUser.uid);
+
+        // Kullanıcı dokümanı yoksa oluştur
         try {
-          const userRef = doc(db, 'users', firebaseUser.uid);
-          const userSnap = await getDoc(userRef);
-          if (userSnap.exists()) {
-            setUserRole(userSnap.data().role || 'customer');
-            await setDoc(userRef, { lastLogin: serverTimestamp() }, { merge: true });
-          } else {
+          const { getDoc } = await import('firebase/firestore');
+          const snap = await getDoc(userRef);
+          if (!snap.exists()) {
             await setDoc(userRef, {
               uid: firebaseUser.uid,
               email: firebaseUser.email,
@@ -28,17 +32,28 @@ export function useAuthListener() {
               createdAt: serverTimestamp(),
               lastLogin: serverTimestamp(),
             });
-            setUserRole('customer');
+          } else {
+            await setDoc(userRef, { lastLogin: serverTimestamp() }, { merge: true });
           }
-        } catch {
-          setUserRole('customer');
-        }
-        setLoading(false);
+        } catch { /* ignore */ }
+
+        // Rolü canlı dinle — Firestore'da değişince anında güncellenir
+        roleUnsubRef.current = onSnapshot(
+          userRef,
+          (snap) => {
+            setUserRole(snap.exists() ? (snap.data().role || 'customer') : 'customer');
+            setLoading(false);
+          },
+          () => { setUserRole('customer'); setLoading(false); }
+        );
       } else {
         clearAuth();
       }
     });
-    return unsubscribe;
+    return () => {
+      unsubscribe();
+      if (roleUnsubRef.current) roleUnsubRef.current();
+    };
   }, [setUser, setUserRole, setLoading, clearAuth]);
 }
 
