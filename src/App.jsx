@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import { HelmetProvider } from 'react-helmet-async';
@@ -13,6 +13,7 @@ import ProtectedRoute from './routes/ProtectedRoute';
 import AdminRoute from './routes/AdminRoute';
 import { useAuthListener } from './hooks/useAuth';
 import { useSiteSettingsListener } from './hooks/useSiteSettings';
+import useSiteSettingsStore from './store/useSiteSettingsStore';
 import { Skeleton } from './components/ui/Skeleton';
 
 // Lazy-loaded pages
@@ -71,6 +72,19 @@ function AppRoutes() {
 function AppInit() {
   useAuthListener();
   useSiteSettingsListener();
+
+  const logo = useSiteSettingsStore((s) => s.settings.logo);
+  useEffect(() => {
+    if (!logo) return;
+    let link = document.querySelector("link[rel~='icon']");
+    if (!link) {
+      link = document.createElement('link');
+      link.rel = 'icon';
+      document.head.appendChild(link);
+    }
+    link.href = logo;
+  }, [logo]);
+
   return null;
 }
 
