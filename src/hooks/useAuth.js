@@ -1,24 +1,27 @@
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
-import { doc, getDoc, onSnapshot, setDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { auth, db } from '../lib/firebase';
 import useAuthStore from '../store/useAuthStore';
 
+// Bu mailler her zaman admin sayılır — Firestore rules engelleyemez
+const ADMIN_EMAILS = ['berkayer032@gmail.com', 'adasosyal09@gmail.com'];
+
 export function useAuthListener() {
   const { setUser, setUserRole, setLoading, clearAuth } = useAuthStore();
-  const roleUnsubRef = useRef(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
-      // Önceki rol dinleyicisini temizle
-      if (roleUnsubRef.current) { roleUnsubRef.current(); roleUnsubRef.current = null; }
-
       if (firebaseUser) {
         setUser(firebaseUser);
-        const userRef = doc(db, 'users', firebaseUser.uid);
+        const isAdminEmail = ADMIN_EMAILS.includes(firebaseUser.email);
 
-        // Kullanıcı dokümanı yoksa oluştur
+        // Önce email listesinden rolü kesin belirle
+        let role = isAdminEmail ? 'admin' : 'customer';
+
+        // Firestore'dan okumayı dene; başarılı olursa admin-email-olmayan kullanıcılar için Firestore'daki rol geçerli
         try {
+          const userRef = doc(db, 'users', firebaseUser.uid);
           const snap = await getDoc(userRef);
           if (!snap.exists()) {
             await setDoc(userRef, {
@@ -27,32 +30,23 @@ export function useAuthListener() {
               displayName: firebaseUser.displayName || '',
               photoURL: firebaseUser.photoURL || '',
               phone: '',
-              role: 'customer',
+              role,
               createdAt: serverTimestamp(),
               lastLogin: serverTimestamp(),
             });
           } else {
-            await setDoc(userRef, { lastLogin: serverTimestamp() }, { merge: true });
+            if (!isAdminEmail) role = snap.data().role || 'customer';
+            await setDoc(userRef, { lastLogin: serverTimestamp(), role }, { merge: true });
           }
-        } catch { /* ignore */ }
+        } catch { /* Firestore erişilemese bile email listesi geçerli */ }
 
-        // Rolü canlı dinle — Firestore'da değişince anında güncellenir
-        roleUnsubRef.current = onSnapshot(
-          userRef,
-          (snap) => {
-            setUserRole(snap.exists() ? (snap.data().role || 'customer') : 'customer');
-            setLoading(false);
-          },
-          () => { setUserRole('customer'); setLoading(false); }
-        );
+        setUserRole(role);
+        setLoading(false);
       } else {
         clearAuth();
       }
     });
-    return () => {
-      unsubscribe();
-      if (roleUnsubRef.current) roleUnsubRef.current();
-    };
+    return unsubscribe;
   }, [setUser, setUserRole, setLoading, clearAuth]);
 }
 
