@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
-import { doc, onSnapshot, setDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, getDoc, onSnapshot, setDoc, serverTimestamp } from 'firebase/firestore';
 import { auth, db } from '../lib/firebase';
 import useAuthStore from '../store/useAuthStore';
 
@@ -19,7 +19,6 @@ export function useAuthListener() {
 
         // Kullanıcı dokümanı yoksa oluştur
         try {
-          const { getDoc } = await import('firebase/firestore');
           const snap = await getDoc(userRef);
           if (!snap.exists()) {
             await setDoc(userRef, {
