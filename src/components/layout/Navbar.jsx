@@ -16,7 +16,7 @@ export default function Navbar() {
   const scrollY = useScrollY();
   const { setMobileMenuOpen } = useUIStore();
   const { user, userRole } = useAuthStore();
-  const siteName = useSiteSettingsStore((s) => s.settings.siteName);
+  const { siteName, logo } = useSiteSettingsStore((s) => s.settings);
   const { pathname } = useLocation();
   const scrolled = scrollY > 80;
 
@@ -43,16 +43,23 @@ export default function Navbar() {
       <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         {/* Logo */}
         <Link to="/" style={{ textDecoration: 'none' }}>
-          <motion.span
-            whileHover={{ scale: 1.03 }}
-            style={{
-              fontFamily: 'Sora, sans-serif', fontWeight: 800,
-              fontSize: '1.3rem', letterSpacing: '-0.02em',
-              background: 'linear-gradient(135deg, var(--color-primary), var(--color-primary-light))',
-              WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
-            }}
-          >
-            {siteName}
+          <motion.span whileHover={{ scale: 1.03 }} style={{ display: 'flex', alignItems: 'center' }}>
+            {logo ? (
+              <img
+                src={logo}
+                alt={siteName}
+                style={{ height: '36px', maxWidth: '140px', objectFit: 'contain', display: 'block' }}
+              />
+            ) : (
+              <span style={{
+                fontFamily: 'Sora, sans-serif', fontWeight: 800,
+                fontSize: '1.3rem', letterSpacing: '-0.02em',
+                background: 'linear-gradient(135deg, var(--color-primary), var(--color-primary-light))',
+                WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
+              }}>
+                {siteName}
+              </span>
+            )}
           </motion.span>
         </Link>
 

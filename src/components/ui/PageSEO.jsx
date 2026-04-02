@@ -21,7 +21,8 @@ export default function PageSEO({ title, description, path = '/', image, noindex
 
   const desc = description || settings.tagline || 'Kuşadası\'nda profesyonel reklam, fotoğraf çekimi ve dijital pazarlama hizmetleri.';
   const canonical = BASE_URL + path;
-  const ogImage = image || settings.heroImage || null;
+  // heroImage → logo → yok (boş bırakma yerine hiç tag ekleme)
+  const ogImage = image || settings.heroImage || settings.logo || null;
 
   return (
     <Helmet>

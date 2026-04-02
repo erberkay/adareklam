@@ -19,9 +19,13 @@ export default function Footer() {
           {/* Brand */}
           <RevealOnScroll variant="fadeUp">
             <div>
-              <span style={{ fontFamily: 'Sora, sans-serif', fontWeight: 800, fontSize: '1.5rem', letterSpacing: '-0.02em', background: 'linear-gradient(135deg, var(--color-primary), var(--color-primary-light))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
-                {settings.siteName}
-              </span>
+              {settings.logo ? (
+                <img src={settings.logo} alt={settings.siteName} style={{ height: '40px', maxWidth: '160px', objectFit: 'contain', display: 'block' }} />
+              ) : (
+                <span style={{ fontFamily: 'Sora, sans-serif', fontWeight: 800, fontSize: '1.5rem', letterSpacing: '-0.02em', background: 'linear-gradient(135deg, var(--color-primary), var(--color-primary-light))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
+                  {settings.siteName}
+                </span>
+              )}
               <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.875rem', marginTop: '0.75rem', lineHeight: 1.7 }}>
                 {settings.tagline}
               </p>
