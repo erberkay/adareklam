@@ -1,5 +1,5 @@
-import { Helmet } from 'react-helmet-async';
 import { Camera, Megaphone, Globe, AtSign, Package, Clapperboard, ArrowRight, Briefcase, ImageIcon, Star } from 'lucide-react';
+import PageSEO from '../components/ui/PageSEO';
 import { Link } from 'react-router-dom';
 import PageTransition from '../components/layout/PageTransition';
 import RevealOnScroll from '../components/ui/RevealOnScroll';
@@ -64,7 +64,6 @@ const FALLBACK_IMAGES = [
 
 export default function ServicesPage() {
   const settings = useSiteSettingsStore((s) => s.settings);
-  const siteName = settings.siteName;
   const { user } = useAuthStore();
   const { data: firestoreServices, loading } = useCollection('services', [where('isActive', '==', true), orderBy('order', 'asc')]);
 
@@ -78,18 +77,31 @@ export default function ServicesPage() {
       }))
     : FALLBACK_SERVICES;
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: `${settings.siteName} Hizmetleri`,
+    url: 'https://erberkay.github.io/adareklam/hizmetler',
+    itemListElement: services.map((svc, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      item: {
+        '@type': 'Service',
+        name: svc.title,
+        description: svc.desc,
+        provider: { '@type': 'LocalBusiness', name: settings.siteName },
+      },
+    })),
+  };
+
   return (
     <PageTransition>
-      <Helmet>
-        <title>Hizmetler — {siteName}</title>
-        <meta name="description" content="Profesyonel fotoğraf çekimi, web tasarımı, reklam ve sosyal medya yönetimi hizmetlerimizi keşfedin." />
-        <meta property="og:title" content={`Hizmetler — ${siteName}`} />
-        <meta property="og:description" content="Profesyonel fotoğraf çekimi, web tasarımı, reklam ve sosyal medya yönetimi hizmetlerimizi keşfedin." />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://erberkay.github.io/adareklam/hizmetler" />
-        {settings.heroImage && <meta property="og:image" content={settings.heroImage} />}
-        <meta name="twitter:card" content="summary_large_image" />
-      </Helmet>
+      <PageSEO
+        title="Hizmetler"
+        description="Profesyonel fotoğraf çekimi, web tasarımı, reklam ve sosyal medya yönetimi hizmetlerimizi keşfedin."
+        path="/hizmetler"
+        jsonLd={jsonLd}
+      />
 
       <div style={{ paddingTop: '7rem', background: 'var(--color-bg-primary)' }}>
         {/* Hero */}

@@ -1,25 +1,35 @@
-import { Helmet } from 'react-helmet-async';
 import PageTransition from '../components/layout/PageTransition';
 import RevealOnScroll from '../components/ui/RevealOnScroll';
 import StatsSection from '../components/home/StatsSection';
 import CTASection from '../components/home/CTASection';
 import useSiteSettingsStore from '../store/useSiteSettingsStore';
+import PageSEO from '../components/ui/PageSEO';
+
+const BASE_URL = 'https://erberkay.github.io/adareklam';
 
 export default function AboutPage() {
   const settings = useSiteSettingsStore((s) => s.settings);
   const desc = settings.aboutText || `${settings.siteName} hakkında bilgi edinin. Kuşadası'nda profesyonel reklam ve fotoğraf hizmetleri.`;
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    '@id': BASE_URL + '/#organization',
+    name: settings.siteName,
+    url: BASE_URL,
+    logo: settings.logo || undefined,
+    description: desc,
+    foundingLocation: 'Kuşadası, Aydın, Türkiye',
+    sameAs: [
+      settings.socialMedia?.instagram,
+      settings.socialMedia?.facebook,
+      settings.socialMedia?.youtube,
+    ].filter(Boolean),
+  };
+
   return (
     <PageTransition>
-      <Helmet>
-        <title>Hakkımızda — {settings.siteName}</title>
-        <meta name="description" content={desc} />
-        <meta property="og:title" content={`Hakkımızda — ${settings.siteName}`} />
-        <meta property="og:description" content={desc} />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://erberkay.github.io/adareklam/hakkimizda" />
-        {settings.heroImage && <meta property="og:image" content={settings.heroImage} />}
-        <meta name="twitter:card" content="summary_large_image" />
-      </Helmet>
+      <PageSEO title="Hakkımızda" description={desc} path="/hakkimizda" jsonLd={jsonLd} />
 
       <div style={{ paddingTop: '7rem', background: 'var(--color-bg-primary)' }}>
         {/* Hero */}

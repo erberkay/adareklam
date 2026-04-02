@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Helmet } from 'react-helmet-async';
+import PageSEO from '../components/ui/PageSEO';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -47,7 +47,7 @@ export default function LoginPage() {
 
   return (
     <PageTransition>
-      <Helmet><title>Giriş Yap — {siteName}</title></Helmet>
+      <PageSEO title="Giriş Yap" path="/giris" noindex />
       <div style={{
         minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center',
         background: 'var(--color-bg-primary)', position: 'relative', overflow: 'hidden', padding: '2rem',

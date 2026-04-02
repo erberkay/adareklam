@@ -1,4 +1,4 @@
-import { Helmet } from 'react-helmet-async';
+import PageSEO from '../components/ui/PageSEO';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -44,7 +44,7 @@ export default function RegisterPage() {
 
   return (
     <PageTransition>
-      <Helmet><title>Kayıt Ol — {siteName}</title></Helmet>
+      <PageSEO title="Kayıt Ol" path="/kayit" noindex />
       <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--color-bg-primary)', position: 'relative', overflow: 'hidden', padding: '2rem' }}>
         <GradientBlob size={500} opacity={0.08} x="80%" y="30%" />
         <GradientBlob size={400} opacity={0.06} x="20%" y="70%" />

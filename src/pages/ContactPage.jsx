@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { Helmet } from 'react-helmet-async';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -12,6 +11,9 @@ import PageTransition from '../components/layout/PageTransition';
 import RevealOnScroll from '../components/ui/RevealOnScroll';
 import Button from '../components/ui/Button';
 import useSiteSettingsStore from '../store/useSiteSettingsStore';
+import PageSEO from '../components/ui/PageSEO';
+
+const BASE_URL = 'https://erberkay.github.io/adareklam';
 
 const schema = z.object({
   name: z.string().min(2, 'En az 2 karakter girin'),
@@ -32,18 +34,48 @@ export default function ContactPage() {
     toast.success('Mesajınız iletildi!');
   };
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'LocalBusiness',
+    '@id': BASE_URL + '/#organization',
+    name: settings.siteName,
+    url: BASE_URL,
+    telephone: settings.phone,
+    email: settings.email,
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: settings.address,
+      addressLocality: 'Kuşadası',
+      addressRegion: 'Aydın',
+      addressCountry: 'TR',
+    },
+    geo: {
+      '@type': 'GeoCoordinates',
+      latitude: 37.856,
+      longitude: 27.2636,
+    },
+    contactPoint: {
+      '@type': 'ContactPoint',
+      telephone: settings.phone,
+      contactType: 'customer service',
+      availableLanguage: 'Turkish',
+    },
+    openingHoursSpecification: {
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+      opens: '09:00',
+      closes: '18:00',
+    },
+  };
+
   return (
     <PageTransition>
-      <Helmet>
-        <title>İletişim — {settings.siteName}</title>
-        <meta name="description" content="Bizimle iletişime geçin. Kuşadası'nda profesyonel reklam ve fotoğraf hizmetleri için." />
-        <meta property="og:title" content={`İletişim — ${settings.siteName}`} />
-        <meta property="og:description" content="Bizimle iletişime geçin. Kuşadası'nda profesyonel reklam ve fotoğraf hizmetleri için." />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://erberkay.github.io/adareklam/iletisim" />
-        {settings.heroImage && <meta property="og:image" content={settings.heroImage} />}
-        <meta name="twitter:card" content="summary_large_image" />
-      </Helmet>
+      <PageSEO
+        title="İletişim"
+        description={`${settings.siteName} ile iletişime geçin. Kuşadası'nda profesyonel reklam ve fotoğraf hizmetleri için bize ulaşın.`}
+        path="/iletisim"
+        jsonLd={jsonLd}
+      />
 
       <div style={{ paddingTop: '7rem', background: 'var(--color-bg-primary)', minHeight: '100vh' }}>
         <section className="section-padding" style={{ paddingTop: '3rem' }}>

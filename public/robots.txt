@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+Disallow: /admin
+Disallow: /musteri
+Disallow: /giris
+Disallow: /kayit
+
+Sitemap: https://erberkay.github.io/adareklam/sitemap.xml
