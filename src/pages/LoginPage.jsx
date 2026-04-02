@@ -23,21 +23,27 @@ const schema = z.object({
 export default function LoginPage() {
   const navigate = useNavigate();
   const siteName = useSiteSettingsStore((s) => s.settings.siteName);
-  const { userRole } = useAuthStore();
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm({ resolver: zodResolver(schema) });
+
+  const redirect = () => {
+    // Closure yerine store'dan anlık değer oku
+    setTimeout(() => {
+      const role = useAuthStore.getState().userRole;
+      navigate(role === 'admin' ? '/admin' : '/musteri');
+    }, 600);
+  };
 
   const onSubmit = async ({ email, password }) => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       toast.success('Giriş başarılı!');
+      redirect();
     } catch {
       toast.error('E-posta veya şifre hatalı.');
     }
   };
 
-  const handleSuccess = () => {
-    setTimeout(() => navigate(userRole === 'admin' ? '/admin' : '/musteri'), 300);
-  };
+  const handleSuccess = () => redirect();
 
   return (
     <PageTransition>
