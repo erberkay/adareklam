@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { toast } from 'sonner';
-import { X, Plus } from 'lucide-react';
+import { X, Plus, RotateCcw } from 'lucide-react';
 import Button from '../ui/Button';
 import { useUpload } from '../../hooks/useStorage';
 import useSiteSettingsStore from '../../store/useSiteSettingsStore';
@@ -14,11 +14,16 @@ export default function SiteSettings() {
   const { upload: uploadHero, uploading: heroUploading } = useUpload();
   const { register, handleSubmit, reset, formState: { isSubmitting } } = useForm();
   const [brands, setBrands] = useState(settings.brands || []);
+  const [logoRadius, setLogoRadius] = useState(settings.logoRadius ?? 0);
   const brandInputRef = useRef(null);
 
   useEffect(() => {
     setBrands(settings.brands || []);
   }, [settings.brands]);
+
+  useEffect(() => {
+    setLogoRadius(settings.logoRadius ?? 0);
+  }, [settings.logoRadius]);
 
   useEffect(() => {
     if (settings) reset({ ...settings, ...settings.socialMedia, ...settings.stats });
@@ -40,6 +45,7 @@ export default function SiteSettings() {
         phone: data.phone, email: data.email, address: data.address, aboutText: data.aboutText,
         primaryColor: data.primaryColor,
         heroVideo: data.heroVideo || '',
+        logoRadius: Number(logoRadius),
         brands,
         socialMedia: { instagram: data.instagram || '', facebook: data.facebook || '', youtube: data.youtube || '', whatsapp: data.whatsapp || '' },
         stats: { projectCount: Number(data.projectCount) || 0, clientCount: Number(data.clientCount) || 0, yearExperience: Number(data.yearExperience) || 0, photoCount: Number(data.photoCount) || 0 },
@@ -73,6 +79,15 @@ export default function SiteSettings() {
       toast.success('Hero görseli yüklendi!');
     } catch (err) {
       toast.error('Görsel yüklenemedi: ' + err.message);
+    }
+  };
+
+  const handleHeroReset = async () => {
+    try {
+      await setDoc(doc(db, 'siteSettings', 'config'), { heroImage: '' }, { merge: true });
+      toast.success('Hero görseli kaldırıldı!');
+    } catch (err) {
+      toast.error('İşlem başarısız: ' + err.message);
     }
   };
 
@@ -164,7 +179,32 @@ export default function SiteSettings() {
                   {logoUploading ? 'Yükleniyor…' : 'Yükle'}
                   <input type="file" accept="image/*" onChange={handleLogoUpload} style={{ display: 'none' }} disabled={logoUploading} />
                 </label>
-                {settings.logo && <img src={settings.logo} alt="Logo" style={{ height: '40px', marginTop: '0.5rem', objectFit: 'contain' }} />}
+                {settings.logo && (
+                  <div style={{ marginTop: '0.75rem' }}>
+                    <img
+                      src={settings.logo}
+                      alt="Logo"
+                      style={{ height: '48px', maxWidth: '160px', objectFit: 'contain', display: 'block', borderRadius: logoRadius + '%', background: 'rgba(255,255,255,0.05)', padding: '4px' }}
+                    />
+                    <p style={{ color: 'var(--color-text-muted)', fontSize: '0.72rem', marginTop: '0.4rem' }}>Önizleme (Navbar/Footer)</p>
+                  </div>
+                )}
+              </div>
+              <div>
+                <label style={{ display: 'block', color: 'var(--color-text-muted)', fontSize: '0.8rem', marginBottom: '0.75rem' }}>Logo Köşe Yuvarlama</label>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                  <span style={{ color: 'var(--color-text-muted)', fontSize: '0.75rem', whiteSpace: 'nowrap' }}>Köşeli</span>
+                  <input
+                    type="range"
+                    min={0}
+                    max={50}
+                    value={logoRadius}
+                    onChange={(e) => setLogoRadius(Number(e.target.value))}
+                    style={{ flex: 1, accentColor: 'var(--color-primary)' }}
+                  />
+                  <span style={{ color: 'var(--color-text-muted)', fontSize: '0.75rem', whiteSpace: 'nowrap' }}>Yuvarlak</span>
+                </div>
+                <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.78rem', marginTop: '0.4rem' }}>{logoRadius}% — {logoRadius === 50 ? 'Tam daire' : logoRadius === 0 ? 'Köşeli' : 'Hafif yuvarlak'}</p>
               </div>
               <div>
                 <label style={{ display: 'block', color: 'var(--color-text-muted)', fontSize: '0.8rem', marginBottom: '0.5rem' }}>Hero Görseli</label>
@@ -172,7 +212,14 @@ export default function SiteSettings() {
                   {heroUploading ? 'Yükleniyor…' : 'Yükle'}
                   <input type="file" accept="image/*" onChange={handleHeroUpload} style={{ display: 'none' }} disabled={heroUploading} />
                 </label>
-                {settings.heroImage && <img src={settings.heroImage} alt="Hero" style={{ height: '60px', marginTop: '0.5rem', objectFit: 'cover', borderRadius: '8px' }} />}
+                {settings.heroImage && (
+                  <>
+                    <img src={settings.heroImage} alt="Hero" style={{ height: '60px', marginTop: '0.5rem', objectFit: 'cover', borderRadius: '8px', display: 'block' }} />
+                    <button type="button" onClick={handleHeroReset} style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', padding: '5px 10px', borderRadius: '8px', border: '1px solid rgba(239,68,68,0.5)', color: 'rgb(239,68,68)', background: 'transparent', cursor: 'pointer', fontSize: '0.78rem', marginTop: '0.5rem' }}>
+                      <RotateCcw size={12} /> Kaldır
+                    </button>
+                  </>
+                )}
               </div>
             </div>
           </Section>

@@ -16,7 +16,7 @@ export default function Navbar() {
   const scrollY = useScrollY();
   const { setMobileMenuOpen } = useUIStore();
   const { user, userRole } = useAuthStore();
-  const { siteName, logo } = useSiteSettingsStore((s) => s.settings);
+  const { siteName, logo, logoRadius } = useSiteSettingsStore((s) => s.settings);
   const { pathname } = useLocation();
   const scrolled = scrollY > 80;
 
@@ -48,7 +48,7 @@ export default function Navbar() {
               <img
                 src={logo}
                 alt={siteName}
-                style={{ height: '36px', maxWidth: '140px', objectFit: 'contain', display: 'block' }}
+                style={{ height: '36px', maxWidth: '140px', objectFit: 'contain', display: 'block', borderRadius: (logoRadius || 0) + '%' }}
               />
             ) : (
               <span style={{
@@ -64,7 +64,18 @@ export default function Navbar() {
         </Link>
 
         {/* Desktop Nav */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }} className="hidden md:flex">
+        <div
+          style={{
+            display: 'flex', alignItems: 'center', gap: '0.25rem',
+            background: scrolled ? 'transparent' : 'rgba(10,10,10,0.45)',
+            backdropFilter: scrolled ? 'none' : 'blur(12px)',
+            borderRadius: '50px',
+            padding: '4px',
+            border: scrolled ? 'none' : '1px solid rgba(255,255,255,0.08)',
+            transition: 'background 0.3s ease',
+          }}
+          className="hidden md:flex"
+        >
           {NAV_LINKS.map((link, i) => (
             <motion.div key={link.path} custom={i} variants={navItemVariants} initial="hidden" animate="visible" style={{ position: 'relative' }}>
               <Link
@@ -72,7 +83,7 @@ export default function Navbar() {
                 style={{
                   textDecoration: 'none', padding: '6px 14px', borderRadius: '50px',
                   fontFamily: 'Inter, sans-serif', fontWeight: 500, fontSize: '0.875rem',
-                  color: pathname === link.path ? 'var(--color-primary)' : 'var(--color-text-secondary)',
+                  color: pathname === link.path ? 'var(--color-primary)' : 'var(--color-text-primary)',
                   transition: 'color 0.2s ease',
                   display: 'block',
                 }}
@@ -95,7 +106,17 @@ export default function Navbar() {
         {/* Auth CTA */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
           {user ? (
-            <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+            <div
+              style={{
+                display: 'flex', gap: '0.5rem', alignItems: 'center',
+                background: scrolled ? 'transparent' : 'rgba(10,10,10,0.45)',
+                backdropFilter: scrolled ? 'none' : 'blur(12px)',
+                borderRadius: '50px',
+                padding: '4px 8px',
+                border: scrolled ? 'none' : '1px solid rgba(255,255,255,0.08)',
+                transition: 'background 0.3s ease',
+              }}
+            >
               <Link
                 to={userRole === 'admin' ? '/admin' : '/musteri'}
                 className="btn-ghost"

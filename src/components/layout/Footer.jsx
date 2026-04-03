@@ -20,7 +20,7 @@ export default function Footer() {
           <RevealOnScroll variant="fadeUp">
             <div>
               {settings.logo ? (
-                <img src={settings.logo} alt={settings.siteName} style={{ height: '40px', maxWidth: '160px', objectFit: 'contain', display: 'block' }} />
+                <img src={settings.logo} alt={settings.siteName} style={{ height: '40px', maxWidth: '160px', objectFit: 'contain', display: 'block', borderRadius: (settings.logoRadius || 0) + '%' }} />
               ) : (
                 <span style={{ fontFamily: 'Sora, sans-serif', fontWeight: 800, fontSize: '1.5rem', letterSpacing: '-0.02em', background: 'linear-gradient(135deg, var(--color-primary), var(--color-primary-light))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
                   {settings.siteName}

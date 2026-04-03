@@ -105,6 +105,13 @@ export default function HeroSection() {
         background: 'linear-gradient(to bottom, rgba(10,10,10,0.3) 0%, rgba(10,10,10,0.7) 60%, rgba(10,10,10,0.95) 100%)',
         zIndex: 1,
       }} />
+      {/* Navbar area dark overlay — navbar her zaman okunabilir olsun */}
+      <div style={{
+        position: 'absolute', top: 0, left: 0, right: 0, height: '140px',
+        background: 'linear-gradient(to bottom, rgba(10,10,10,0.65) 0%, transparent 100%)',
+        zIndex: 1,
+        pointerEvents: 'none',
+      }} />
 
       {/* Blobs */}
       <GradientBlob size={500} opacity={0.08} x="10%" y="30%" />

@@ -7,7 +7,6 @@ import { Toaster } from 'sonner';
 import SmoothScroll from './components/layout/SmoothScroll';
 import Layout from './components/layout/Layout';
 import LoadingScreen from './components/ui/LoadingScreen';
-import CustomCursor from './components/ui/CustomCursor';
 import ErrorBoundary from './components/ui/ErrorBoundary';
 import ProtectedRoute from './routes/ProtectedRoute';
 import AdminRoute from './routes/AdminRoute';
@@ -95,8 +94,7 @@ export default function App() {
       <BrowserRouter basename="/adareklam">
         <SmoothScroll>
           <AppInit />
-          <CustomCursor />
-          <LoadingScreen />
+<LoadingScreen />
           <AppRoutes />
           <Toaster
             theme="dark"
