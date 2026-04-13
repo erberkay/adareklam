@@ -40,7 +40,6 @@ export default function TestimonialsSection() {
                 <div
                   key={t.id}
                   className="testimonial-slide"
-                  style={{ flex: '0 0 calc(33.333% - 1rem)', minWidth: '280px' }}
                 >
                   <TestimonialCard testimonial={t} />
                 </div>

@@ -297,6 +297,12 @@ body {
   transform-origin: left;
 }
 
+/* ==================== TESTIMONIALS ==================== */
+.testimonial-slide {
+  flex: 0 0 calc(33.333% - 1rem);
+  min-width: 280px;
+}
+
 /* ==================== BUTON GRUBU ==================== */
 /* Nav dışındaki tüm buton gruplarına minimum boşluk */
 .btn-group {
@@ -331,6 +337,7 @@ body {
   .testimonial-slide {
     flex: 0 0 85% !important;
     min-width: 0 !important;
+    max-width: 85% !important;
   }
 
   /* Section başlıkları ile içerik arası boşluk */
