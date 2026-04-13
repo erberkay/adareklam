@@ -9,7 +9,7 @@ import { Skeleton } from '../ui/Skeleton';
 
 export default function ContactManager() {
   const { data: contacts, loading } = useCollection('contacts', [orderBy('createdAt', 'desc')]);
-  const unread = contacts.filter((c) => !c.isRead).length;
+  const unread = (contacts || []).filter((c) => !c.isRead).length;
 
   const markRead = async (id) => {
     await updateDoc(doc(db, 'contacts', id), { isRead: true });

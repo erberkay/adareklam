@@ -52,6 +52,7 @@ export default function QuoteRequestForm({ onSuccess }) {
   const prev = () => setStep((s) => Math.max(s - 1, 0));
 
   const onSubmit = async (data) => {
+    if (!user?.uid) { toast.error('Lütfen önce giriş yapın'); return; }
     try {
       let attachments = [];
       if (files.length) {

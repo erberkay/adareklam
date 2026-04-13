@@ -28,28 +28,40 @@ export default function PortfolioManager() {
 
   const handleSave = async () => {
     if (!form.title || !form.category) { toast.error('Başlık ve kategori zorunlu'); return; }
-    let urls = [...existingImages];
-    for (const f of images) {
-      const url = await upload(f, 'portfolio');
-      urls.push(url);
+    try {
+      let urls = [...existingImages];
+      for (const f of images) {
+        const url = await upload(f, 'portfolio');
+        urls.push(url);
+      }
+      const thumbnail = urls[0] || '';
+      const data = { ...form, images: urls, thumbnail };
+      if (editing) await updateDocument('portfolio', editing.id, data);
+      else await addDocument('portfolio', data);
+      toast.success(editing ? 'Güncellendi!' : 'Eklendi!');
+      setModalOpen(false);
+    } catch (err) {
+      toast.error('Kaydedilemedi: ' + err.message);
     }
-    const thumbnail = urls[0] || '';
-    const data = { ...form, images: urls, thumbnail };
-    if (editing) await updateDocument('portfolio', editing.id, data);
-    else await addDocument('portfolio', data);
-    toast.success(editing ? 'Güncellendi!' : 'Eklendi!');
-    setModalOpen(false);
   };
 
   const handleDelete = async (id) => {
     if (!confirm('Silmek istediğinize emin misiniz?')) return;
-    await deleteDocument('portfolio', id);
-    toast.success('Silindi');
+    try {
+      await deleteDocument('portfolio', id);
+      toast.success('Silindi');
+    } catch (err) {
+      toast.error('Silinemedi: ' + err.message);
+    }
   };
 
   const togglePublish = async (item) => {
-    await updateDocument('portfolio', item.id, { isPublished: !item.isPublished });
-    toast.success(item.isPublished ? 'Yayından alındı' : 'Yayınlandı');
+    try {
+      await updateDocument('portfolio', item.id, { isPublished: !item.isPublished });
+      toast.success(item.isPublished ? 'Yayından alındı' : 'Yayınlandı');
+    } catch (err) {
+      toast.error('Güncellenemedi: ' + err.message);
+    }
   };
 
   return (

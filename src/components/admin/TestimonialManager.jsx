@@ -17,20 +17,32 @@ export default function TestimonialManager() {
 
   const handleSave = async () => {
     if (!form.clientName || !form.text) { toast.error('İsim ve yorum zorunlu'); return; }
-    if (editing) await updateDocument('testimonials', editing.id, form);
-    else await addDocument('testimonials', form);
-    toast.success(editing ? 'Güncellendi' : 'Eklendi');
-    setModalOpen(false);
+    try {
+      if (editing) await updateDocument('testimonials', editing.id, form);
+      else await addDocument('testimonials', form);
+      toast.success(editing ? 'Güncellendi' : 'Eklendi');
+      setModalOpen(false);
+    } catch (err) {
+      toast.error('Kaydedilemedi: ' + err.message);
+    }
   };
 
   const handleDelete = async (id) => {
     if (!confirm('Silmek istediğinize emin misiniz?')) return;
-    await deleteDocument('testimonials', id);
-    toast.success('Silindi');
+    try {
+      await deleteDocument('testimonials', id);
+      toast.success('Silindi');
+    } catch (err) {
+      toast.error('Silinemedi: ' + err.message);
+    }
   };
 
   const togglePublish = async (t) => {
-    await updateDocument('testimonials', t.id, { isPublished: !t.isPublished });
+    try {
+      await updateDocument('testimonials', t.id, { isPublished: !t.isPublished });
+    } catch (err) {
+      toast.error('Güncellenemedi: ' + err.message);
+    }
   };
 
   return (

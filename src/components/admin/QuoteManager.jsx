@@ -22,9 +22,13 @@ export default function QuoteManager() {
   };
 
   const handleUpdate = async () => {
-    await updateDocument('quotes', selected.id, { status, adminResponse: response, quotedPrice: Number(price) || 0 });
-    toast.success('Teklif güncellendi');
-    setSelected(null);
+    try {
+      await updateDocument('quotes', selected.id, { status, adminResponse: response, quotedPrice: Number(price) || 0 });
+      toast.success('Teklif güncellendi');
+      setSelected(null);
+    } catch (err) {
+      toast.error('Güncellenemedi: ' + err.message);
+    }
   };
 
   const filtered = filter === 'all' ? quotes : quotes?.filter((q) => q.status === filter);

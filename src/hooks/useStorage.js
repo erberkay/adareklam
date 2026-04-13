@@ -8,6 +8,7 @@ async function compressImage(file, maxWidth = 1920) {
     if (!file.type.startsWith('image/')) { resolve(file); return; }
     const img = new Image();
     const url = URL.createObjectURL(file);
+    img.onerror = () => { URL.revokeObjectURL(url); resolve(file); };
     img.onload = () => {
       URL.revokeObjectURL(url);
       if (img.width <= maxWidth) { resolve(file); return; }

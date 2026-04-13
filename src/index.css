@@ -299,10 +299,67 @@ body {
 
 /* ==================== RESPONSIVE ==================== */
 @media (max-width: 768px) {
-  .section-padding { padding: 4rem 0; }
-  .container { padding: 0 1rem; }
+  .section-padding { padding: 3.5rem 0; }
+  .container { padding: 0 1.25rem; }
+
+  /* Servis sayfası grid */
   .service-row-grid {
     grid-template-columns: 1fr !important;
     gap: 2rem !important;
+  }
+
+  /* Tipografi */
+  .hero-title {
+    font-size: clamp(2.2rem, 10vw, 3.5rem) !important;
+    line-height: 1.1 !important;
+  }
+  .heading-section {
+    font-size: clamp(1.75rem, 7vw, 2.5rem) !important;
+  }
+
+  /* Butonlar — mobilde tam genişlik değil ama taşmasın */
+  .btn-primary, .btn-ghost {
+    padding: 12px 24px;
+    font-size: 0.85rem;
+  }
+
+  /* Glass card hover efektini mobilde kaldır (touch cihaz) */
+  .glass-card:hover {
+    transform: none;
+    box-shadow: none;
+  }
+
+  /* Stats grid — 2'li */
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  /* Footer grid — tek kolon */
+  .footer-grid {
+    grid-template-columns: 1fr !important;
+    gap: 2rem !important;
+  }
+
+  /* Marquee biraz yavaşlasın */
+  .marquee-track {
+    animation-duration: 30s;
+  }
+}
+
+@media (max-width: 480px) {
+  .section-padding { padding: 2.5rem 0; }
+  .container { padding: 0 1rem; }
+
+  .hero-title {
+    font-size: clamp(1.9rem, 9vw, 2.8rem) !important;
+  }
+  .heading-section {
+    font-size: clamp(1.5rem, 7vw, 2rem) !important;
+  }
+
+  /* Küçük ekranda stats 2'li kalır */
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.75rem !important;
   }
 }

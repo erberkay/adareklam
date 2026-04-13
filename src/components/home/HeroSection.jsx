@@ -118,7 +118,7 @@ export default function HeroSection() {
       <GradientBlob size={400} opacity={0.06} x="80%" y="60%" color="var(--color-primary-light)" />
 
       {/* Content */}
-      <div className="container" style={{ position: 'relative', zIndex: 2, textAlign: 'center' }}>
+      <div className="container" style={{ position: 'relative', zIndex: 2, textAlign: 'center', width: '100%' }}>
         {/* Tagline */}
         <motion.div
           initial={{ clipPath: 'inset(0% 100% 0% 0%)', opacity: 0 }}
@@ -158,7 +158,7 @@ export default function HeroSection() {
           initial={{ y: 30, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 1.3, duration: 0.5 }}
-          style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}
+          style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center', flexWrap: 'wrap', padding: '0 1rem' }}
         >
           <Link to="/portfolyo" className="btn-primary" style={{ textDecoration: 'none' }}>
             Çalışmalarımız <ArrowRight size={16} />

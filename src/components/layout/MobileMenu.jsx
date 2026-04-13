@@ -1,6 +1,9 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { X } from 'lucide-react';
+import { X, LogOut } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
+import { signOut } from 'firebase/auth';
+import { toast } from 'sonner';
+import { auth } from '../../lib/firebase';
 import { NAV_LINKS } from '../../lib/constants';
 import useUIStore from '../../store/useUIStore';
 import useAuthStore from '../../store/useAuthStore';
@@ -10,6 +13,16 @@ export default function MobileMenu() {
   const { user, userRole } = useAuthStore();
   const { pathname } = useLocation();
   const close = () => setMobileMenuOpen(false);
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      toast.success('Çıkış yapıldı');
+      close();
+    } catch (err) {
+      toast.error('Çıkış yapılamadı: ' + err.message);
+    }
+  };
 
   return (
     <AnimatePresence>
@@ -78,17 +91,26 @@ export default function MobileMenu() {
               initial={{ x: 40, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               transition={{ delay: 0.4, duration: 0.4 }}
-              style={{ marginTop: '1rem' }}
+              style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}
             >
               {user ? (
-                <Link
-                  to={userRole === 'admin' ? '/admin' : '/musteri'}
-                  onClick={close}
-                  className="btn-primary"
-                  style={{ width: '100%', justifyContent: 'center', textDecoration: 'none' }}
-                >
-                  Panel
-                </Link>
+                <>
+                  <Link
+                    to={userRole === 'admin' ? '/admin' : '/musteri'}
+                    onClick={close}
+                    className="btn-primary"
+                    style={{ width: '100%', justifyContent: 'center', textDecoration: 'none' }}
+                  >
+                    Panel
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className="btn-ghost"
+                    style={{ width: '100%', justifyContent: 'center', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+                  >
+                    <LogOut size={16} /> Çıkış Yap
+                  </button>
+                </>
               ) : (
                 <Link
                   to="/giris"

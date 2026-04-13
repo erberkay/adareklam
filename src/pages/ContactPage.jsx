@@ -28,10 +28,14 @@ export default function ContactPage() {
   const { register, handleSubmit, formState: { errors, isSubmitting }, reset } = useForm({ resolver: zodResolver(schema) });
 
   const onSubmit = async (data) => {
-    await addDoc(collection(db, 'contacts'), { ...data, isRead: false, createdAt: serverTimestamp() });
-    setSent(true);
-    reset();
-    toast.success('Mesajınız iletildi!');
+    try {
+      await addDoc(collection(db, 'contacts'), { ...data, isRead: false, createdAt: serverTimestamp() });
+      setSent(true);
+      reset();
+      toast.success('Mesajınız iletildi!');
+    } catch (err) {
+      toast.error('Mesaj gönderilemedi: ' + err.message);
+    }
   };
 
   const jsonLd = {

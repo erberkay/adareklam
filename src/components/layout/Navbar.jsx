@@ -21,8 +21,12 @@ export default function Navbar() {
   const scrolled = scrollY > 80;
 
   const handleLogout = async () => {
-    await signOut(auth);
-    toast.success('Çıkış yapıldı');
+    try {
+      await signOut(auth);
+      toast.success('Çıkış yapıldı');
+    } catch (err) {
+      toast.error('Çıkış yapılamadı: ' + err.message);
+    }
   };
 
   return (
@@ -103,8 +107,8 @@ export default function Navbar() {
           ))}
         </div>
 
-        {/* Auth CTA */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+        {/* Auth CTA — sadece desktop */}
+        <div className="hidden md:flex" style={{ alignItems: 'center', gap: '0.75rem' }}>
           {user ? (
             <div
               style={{
@@ -133,19 +137,21 @@ export default function Navbar() {
               Giriş Yap
             </Link>
           )}
-          {/* Mobile hamburger */}
-          <button
-            onClick={() => setMobileMenuOpen(true)}
-            className="md:hidden"
-            style={{
-              background: 'var(--glass-bg)', border: '1px solid var(--glass-border)',
-              borderRadius: '8px', padding: '8px', cursor: 'pointer',
-              color: 'var(--color-text-primary)',
-            }}
-          >
-            <Menu size={20} />
-          </button>
         </div>
+        {/* Mobile hamburger */}
+        <button
+          onClick={() => setMobileMenuOpen(true)}
+          className="md:hidden"
+          style={{
+            background: scrolled ? 'var(--glass-bg)' : 'rgba(10,10,10,0.5)',
+            border: '1px solid var(--glass-border)',
+            borderRadius: '8px', padding: '8px', cursor: 'pointer',
+            color: 'var(--color-text-primary)',
+            backdropFilter: 'blur(12px)',
+          }}
+        >
+          <Menu size={20} />
+        </button>
       </div>
     </motion.nav>
   );

@@ -17,21 +17,33 @@ export default function ServiceManager() {
 
   const handleSave = async () => {
     if (!form.title) { toast.error('Başlık zorunlu'); return; }
-    const data = { ...form, features: form.features.split(',').map((f) => f.trim()).filter(Boolean), order: Number(form.order) };
-    if (editing) await updateDocument('services', editing.id, data);
-    else await addDocument('services', data);
-    toast.success(editing ? 'Güncellendi' : 'Eklendi');
-    setModalOpen(false);
+    try {
+      const data = { ...form, features: form.features.split(',').map((f) => f.trim()).filter(Boolean), order: Number(form.order) };
+      if (editing) await updateDocument('services', editing.id, data);
+      else await addDocument('services', data);
+      toast.success(editing ? 'Güncellendi' : 'Eklendi');
+      setModalOpen(false);
+    } catch (err) {
+      toast.error('Kaydedilemedi: ' + err.message);
+    }
   };
 
   const handleDelete = async (id) => {
     if (!confirm('Silmek istediğinize emin misiniz?')) return;
-    await deleteDocument('services', id);
-    toast.success('Silindi');
+    try {
+      await deleteDocument('services', id);
+      toast.success('Silindi');
+    } catch (err) {
+      toast.error('Silinemedi: ' + err.message);
+    }
   };
 
   const toggleActive = async (svc) => {
-    await updateDocument('services', svc.id, { isActive: !svc.isActive });
+    try {
+      await updateDocument('services', svc.id, { isActive: !svc.isActive });
+    } catch (err) {
+      toast.error('Güncellenemedi: ' + err.message);
+    }
   };
 
   return (
