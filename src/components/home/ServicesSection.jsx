@@ -47,7 +47,7 @@ export default function ServicesSection() {
           ))}
         </motion.div>
 
-        <RevealOnScroll variant="fadeUp" delay={0.3} className="text-center" style={{ marginTop: '3rem' }}>
+        <RevealOnScroll variant="fadeUp" delay={0.3} className="text-center" style={{ marginTop: '3.5rem' }}>
           <Link to="/hizmetler" className="btn-ghost" style={{ textDecoration: 'none' }}>
             Tüm Hizmetlerimiz →
           </Link>
