@@ -23,21 +23,23 @@ export default function TestimonialsSection() {
   const next = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
 
   return (
-    <section className="section-padding" style={{ background: 'var(--color-bg-secondary)', overflow: 'hidden' }}>
+    <section className="section-padding" style={{ background: 'var(--color-bg-secondary)' }}>
       <div className="container">
-        <RevealOnScroll variant="fadeUp" style={{ textAlign: 'center', marginBottom: '3rem' }}>
+        <RevealOnScroll variant="fadeUp" style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
           <span className="section-label">Müşteri Yorumları</span>
           <h2 className="heading-section" style={{ marginTop: '0.75rem', color: 'var(--color-text-primary)' }}>
             Memnun Müşterilerimiz<br /><span className="gradient-text">Ne Diyor?</span>
           </h2>
         </RevealOnScroll>
 
-        <div style={{ position: 'relative' }}>
-          <div ref={emblaRef} style={{ overflow: 'hidden' }}>
+        {/* Carousel — ok butonlarına yer açmak için yatay padding */}
+        <div style={{ position: 'relative', padding: '0 2.5rem' }}>
+          <div ref={emblaRef} style={{ overflow: 'hidden', borderRadius: '12px' }}>
             <div style={{ display: 'flex', gap: '1.5rem' }}>
               {items.map((t) => (
                 <div
                   key={t.id}
+                  className="testimonial-slide"
                   style={{ flex: '0 0 calc(33.333% - 1rem)', minWidth: '280px' }}
                 >
                   <TestimonialCard testimonial={t} />
@@ -86,9 +88,9 @@ function TestimonialCard({ testimonial: t }) {
 function arrowStyle(side) {
   return {
     position: 'absolute', top: '50%', transform: 'translateY(-50%)',
-    [side]: side === 'left' ? '-1.5rem' : '-1.5rem',
+    [side]: '0',
     background: 'var(--color-bg-card)', border: '1px solid var(--glass-border)',
-    borderRadius: '50%', width: '44px', height: '44px',
+    borderRadius: '50%', width: '40px', height: '40px',
     display: 'flex', alignItems: 'center', justifyContent: 'center',
     cursor: 'pointer', color: 'var(--color-text-primary)',
     transition: 'all 0.2s ease', zIndex: 5,

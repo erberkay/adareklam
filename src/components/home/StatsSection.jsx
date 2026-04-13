@@ -30,7 +30,7 @@ export default function StatsSection() {
         pointerEvents: 'none',
       }} />
       <div className="container">
-        <RevealOnScroll variant="fadeUp" style={{ textAlign: 'center', marginBottom: '3rem' }}>
+        <RevealOnScroll variant="fadeUp" style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
           <span className="section-label">Rakamlarla Biz</span>
           <h2 className="heading-section" style={{ marginTop: '0.75rem', color: 'var(--color-text-primary)' }}>
             Güvenilir Deneyim,

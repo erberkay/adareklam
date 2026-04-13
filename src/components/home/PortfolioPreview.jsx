@@ -24,7 +24,7 @@ export default function PortfolioPreview() {
   return (
     <section className="section-padding" style={{ background: 'var(--color-bg-tertiary)' }}>
       <div className="container">
-        <RevealOnScroll variant="fadeUp" style={{ textAlign: 'center', marginBottom: '3rem' }}>
+        <RevealOnScroll variant="fadeUp" style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
           <span className="section-label">Portfolyo</span>
           <h2 className="heading-section" style={{ marginTop: '0.75rem', color: 'var(--color-text-primary)' }}>
             Seçkin<br /><span className="gradient-text">Çalışmalarımız</span>
@@ -49,7 +49,7 @@ export default function PortfolioPreview() {
           </motion.div>
         )}
 
-        <RevealOnScroll variant="fadeUp" delay={0.3} style={{ textAlign: 'center', marginTop: '3rem' }}>
+        <RevealOnScroll variant="fadeUp" delay={0.3} style={{ textAlign: 'center', marginTop: '3.5rem' }}>
           <Link to="/portfolyo" className="btn-primary" style={{ textDecoration: 'none' }}>
             Tüm Çalışmalar <ArrowUpRight size={16} />
           </Link>

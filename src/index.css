@@ -324,8 +324,17 @@ body {
 
 /* ==================== RESPONSIVE ==================== */
 @media (max-width: 768px) {
-  .section-padding { padding: 3.5rem 0; }
+  .section-padding { padding: 4rem 0; }
   .container { padding: 0 1.25rem; }
+
+  /* Testimonials — mobilde 1 kart */
+  .testimonial-slide {
+    flex: 0 0 85% !important;
+    min-width: 0 !important;
+  }
+
+  /* Section başlıkları ile içerik arası boşluk */
+  .section-header-mb { margin-bottom: 2.5rem !important; }
 
   /* Servis sayfası grid */
   .service-row-grid {
