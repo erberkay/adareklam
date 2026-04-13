@@ -158,7 +158,8 @@ export default function HeroSection() {
           initial={{ y: 30, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 1.3, duration: 0.5 }}
-          style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center', flexWrap: 'wrap', padding: '0 1rem' }}
+          className="btn-group"
+          style={{ justifyContent: 'center', padding: '0 1rem' }}
         >
           <Link to="/portfolyo" className="btn-primary" style={{ textDecoration: 'none' }}>
             Çalışmalarımız <ArrowRight size={16} />

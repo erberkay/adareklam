@@ -297,6 +297,22 @@ body {
   transform-origin: left;
 }
 
+/* ==================== BUTON GRUBU ==================== */
+/* Nav dışındaki tüm buton gruplarına minimum boşluk */
+.btn-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;        /* ~0.5cm */
+  align-items: center;
+}
+
+@media (max-width: 767px) {
+  .btn-group {
+    gap: 1rem;
+    justify-content: center;
+  }
+}
+
 /* ==================== RESPONSIVE VISIBILITY ==================== */
 .desktop-only { display: flex !important; }
 .mobile-only  { display: none !important; }

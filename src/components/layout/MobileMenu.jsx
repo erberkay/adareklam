@@ -91,7 +91,7 @@ export default function MobileMenu() {
               initial={{ x: 40, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               transition={{ delay: 0.4, duration: 0.4 }}
-              style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}
+              style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}
             >
               {user ? (
                 <>

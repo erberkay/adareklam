@@ -29,7 +29,7 @@ export default function CTASection() {
             Markanız için en iyi çözümü birlikte tasarlayalım.
             Ücretsiz danışmanlık için hemen iletişime geçin.
           </p>
-          <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+          <div className="btn-group" style={{ justifyContent: 'center' }}>
             <Link to="/iletisim" className="btn-primary" style={{ textDecoration: 'none' }}>
               Teklif Al <ArrowRight size={16} />
             </Link>

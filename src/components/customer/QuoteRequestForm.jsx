@@ -186,7 +186,7 @@ export default function QuoteRequestForm({ onSuccess }) {
           </motion.div>
         </AnimatePresence>
 
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '2rem' }}>
+        <div className="btn-group" style={{ justifyContent: 'space-between', marginTop: '2rem' }}>
           {step > 0 && (
             <button type="button" onClick={prev} className="btn-ghost" style={{ padding: '10px 24px' }}>
               <ChevronLeft size={16} /> Geri
