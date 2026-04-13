@@ -39,7 +39,7 @@ export const NAV_LINKS = [
 ];
 
 export const DEFAULT_SITE_SETTINGS = {
-  siteName: 'Ada Reklamcılık',
+  siteName: 'Ada Sosyal',
   tagline: "Kuşadası'nın Kreatif Ajansı",
   phone: '+90 256 000 00 00',
   email: 'info@adareklamcilik.com',
