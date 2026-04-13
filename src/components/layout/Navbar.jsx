@@ -67,10 +67,11 @@ export default function Navbar() {
           </motion.span>
         </Link>
 
-        {/* Desktop Nav */}
+        {/* Desktop Nav — sadece ≥768px */}
         <div
+          className="desktop-only"
           style={{
-            display: 'flex', alignItems: 'center', gap: '0.25rem',
+            alignItems: 'center', gap: '0.25rem',
             background: scrolled ? 'transparent' : 'rgba(10,10,10,0.45)',
             backdropFilter: scrolled ? 'none' : 'blur(12px)',
             borderRadius: '50px',
@@ -78,7 +79,6 @@ export default function Navbar() {
             border: scrolled ? 'none' : '1px solid rgba(255,255,255,0.08)',
             transition: 'background 0.3s ease',
           }}
-          className="hidden md:flex"
         >
           {NAV_LINKS.map((link, i) => (
             <motion.div key={link.path} custom={i} variants={navItemVariants} initial="hidden" animate="visible" style={{ position: 'relative' }}>
@@ -107,20 +107,10 @@ export default function Navbar() {
           ))}
         </div>
 
-        {/* Auth CTA — sadece desktop */}
-        <div className="hidden md:flex" style={{ alignItems: 'center', gap: '0.75rem' }}>
+        {/* Auth CTA — sadece ≥768px */}
+        <div className="desktop-only" style={{ alignItems: 'center', gap: '0.75rem' }}>
           {user ? (
-            <div
-              style={{
-                display: 'flex', gap: '0.5rem', alignItems: 'center',
-                background: scrolled ? 'transparent' : 'rgba(10,10,10,0.45)',
-                backdropFilter: scrolled ? 'none' : 'blur(12px)',
-                borderRadius: '50px',
-                padding: '4px 8px',
-                border: scrolled ? 'none' : '1px solid rgba(255,255,255,0.08)',
-                transition: 'background 0.3s ease',
-              }}
-            >
+            <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
               <Link
                 to={userRole === 'admin' ? '/admin' : '/musteri'}
                 className="btn-ghost"
@@ -138,19 +128,21 @@ export default function Navbar() {
             </Link>
           )}
         </div>
-        {/* Mobile hamburger */}
+
+        {/* Hamburger — sadece <768px */}
         <button
+          className="mobile-only"
           onClick={() => setMobileMenuOpen(true)}
-          className="md:hidden"
           style={{
-            background: scrolled ? 'var(--glass-bg)' : 'rgba(10,10,10,0.5)',
-            border: '1px solid var(--glass-border)',
-            borderRadius: '8px', padding: '8px', cursor: 'pointer',
+            background: 'rgba(10,10,10,0.55)',
+            border: '1px solid rgba(255,255,255,0.12)',
+            borderRadius: '10px', padding: '9px', cursor: 'pointer',
             color: 'var(--color-text-primary)',
-            backdropFilter: 'blur(12px)',
+            backdropFilter: 'blur(16px)',
+            alignItems: 'center', justifyContent: 'center',
           }}
         >
-          <Menu size={20} />
+          <Menu size={22} />
         </button>
       </div>
     </motion.nav>

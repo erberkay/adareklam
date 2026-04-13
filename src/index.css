@@ -297,6 +297,15 @@ body {
   transform-origin: left;
 }
 
+/* ==================== RESPONSIVE VISIBILITY ==================== */
+.desktop-only { display: flex !important; }
+.mobile-only  { display: none !important; }
+
+@media (max-width: 767px) {
+  .desktop-only { display: none !important; }
+  .mobile-only  { display: flex !important; }
+}
+
 /* ==================== RESPONSIVE ==================== */
 @media (max-width: 768px) {
   .section-padding { padding: 3.5rem 0; }
