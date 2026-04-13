@@ -6,6 +6,7 @@ import RevealOnScroll from '../ui/RevealOnScroll';
 import { staggerContainer, staggerItem } from '../../lib/animations';
 import { useInView } from 'react-intersection-observer';
 import { SkeletonCard } from '../ui/Skeleton';
+import { useIsMobile } from '../../hooks/useMediaQuery';
 
 const DEMO_ITEMS = [
   { id: 1, title: 'Ürün Fotoğrafı', category: 'urun-cekimi', thumbnail: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&q=80' },
@@ -17,6 +18,7 @@ const DEMO_ITEMS = [
 ];
 
 export default function PortfolioPreview() {
+  const isMobile = useIsMobile();
   const { data: portfolio, loading } = useCollection('portfolio', [where('isFeatured', '==', true), limit(6)]);
   const { ref, inView } = useInView({ threshold: 0.1, triggerOnce: true });
   const items = portfolio?.length ? portfolio : DEMO_ITEMS;
@@ -24,7 +26,7 @@ export default function PortfolioPreview() {
   return (
     <section className="section-padding" style={{ background: 'var(--color-bg-tertiary)' }}>
       <div className="container">
-        <RevealOnScroll variant="fadeUp" style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
+        <RevealOnScroll variant="fadeUp" style={{ textAlign: 'center', marginBottom: isMobile ? '2rem' : '3.5rem' }}>
           <span className="section-label">Portfolyo</span>
           <h2 className="heading-section" style={{ marginTop: '0.75rem', color: 'var(--color-text-primary)' }}>
             Seçkin<br /><span className="gradient-text">Çalışmalarımız</span>
@@ -49,7 +51,7 @@ export default function PortfolioPreview() {
           </motion.div>
         )}
 
-        <RevealOnScroll variant="fadeUp" delay={0.3} style={{ textAlign: 'center', marginTop: '3.5rem' }}>
+        <RevealOnScroll variant="fadeUp" delay={0.3} style={{ textAlign: 'center', marginTop: isMobile ? '2rem' : '3.5rem' }}>
           <Link to="/portfolyo" className="btn-primary" style={{ textDecoration: 'none' }}>
             Tüm Çalışmalar <ArrowUpRight size={16} />
           </Link>

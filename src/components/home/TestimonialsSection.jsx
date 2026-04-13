@@ -1,45 +1,52 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { Star, ChevronLeft, ChevronRight, Quote } from 'lucide-react';
 import useEmblaCarousel from 'embla-carousel-react';
 import Autoplay from 'embla-carousel-autoplay';
 import RevealOnScroll from '../ui/RevealOnScroll';
 import { useCollection } from '../../hooks/useFirestore';
+import { useIsMobile } from '../../hooks/useMediaQuery';
 
 const DEMO_TESTIMONIALS = [
   { id: 1, clientName: 'Ayşe Yılmaz', company: 'Yılmaz Butik', rating: 5, text: 'Ada Reklamcılık ile çalışmak harika bir deneyimdi. Ürün fotoğraflarımız satışlarımızı %40 artırdı!', photoURL: 'https://i.pravatar.cc/100?img=1' },
   { id: 2, clientName: 'Mehmet Kaya', company: 'Kaya Restaurant', rating: 5, text: 'Restoranımız için hazırladıkları tanıtım filmi ve sosyal medya içerikleri gerçekten çok profesyoneldi.', photoURL: 'https://i.pravatar.cc/100?img=8' },
   { id: 3, clientName: 'Zeynep Demir', company: 'Demir Hukuk Bürosu', rating: 5, text: 'Web sitemizi modern ve çarpıcı bir görünüme kavuşturan Ada Reklamcılık\'a teşekkürler.', photoURL: 'https://i.pravatar.cc/100?img=5' },
-  { id: 4, clientName: 'Can Öztürk', company: 'Öztürk Otelcilik', rating: 5, text: 'Kuşadası\'nda bu kalitede reklam ajansı bulmak gerçekten güzdi. Kesinlikle tavsiye ediyorum.', photoURL: 'https://i.pravatar.cc/100?img=3' },
+  { id: 4, clientName: 'Can Öztürk', company: 'Öztürk Otelcilik', rating: 5, text: 'Kuşadası\'nda bu kalitede reklam ajansı bulmak gerçekten güzdü. Kesinlikle tavsiye ediyorum.', photoURL: 'https://i.pravatar.cc/100?img=3' },
 ];
 
 export default function TestimonialsSection() {
+  const isMobile = useIsMobile();
   const { data: firestoreItems, loading } = useCollection('testimonials');
   const published = firestoreItems?.filter((t) => t.isPublished !== false) || [];
   const items = loading ? [] : (published.length ? published : DEMO_TESTIMONIALS);
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [Autoplay({ delay: 5000 })]);
+
+  const [emblaRef, emblaApi] = useEmblaCarousel(
+    { loop: true, align: 'start' },
+    [Autoplay({ delay: 5000 })]
+  );
 
   const prev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
   const next = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
 
+  const slideWidth = isMobile ? '88%' : 'calc(33.333% - 1rem)';
+
   return (
     <section className="section-padding" style={{ background: 'var(--color-bg-secondary)' }}>
       <div className="container">
-        <RevealOnScroll variant="fadeUp" style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
+        <RevealOnScroll variant="fadeUp" style={{ textAlign: 'center', marginBottom: isMobile ? '2rem' : '3.5rem' }}>
           <span className="section-label">Müşteri Yorumları</span>
           <h2 className="heading-section" style={{ marginTop: '0.75rem', color: 'var(--color-text-primary)' }}>
             Memnun Müşterilerimiz<br /><span className="gradient-text">Ne Diyor?</span>
           </h2>
         </RevealOnScroll>
 
-        {/* Carousel — ok butonlarına yer açmak için yatay padding */}
-        <div style={{ position: 'relative', padding: '0 2.5rem' }}>
+        <div style={{ position: 'relative', padding: isMobile ? '0 2rem' : '0 2.5rem' }}>
           <div ref={emblaRef} style={{ overflow: 'hidden', borderRadius: '12px' }}>
-            <div style={{ display: 'flex', gap: '1.5rem' }}>
+            <div style={{ display: 'flex', gap: isMobile ? '1rem' : '1.5rem' }}>
               {items.map((t) => (
                 <div
                   key={t.id}
-                  className="testimonial-slide"
+                  style={{ flex: `0 0 ${slideWidth}`, minWidth: 0 }}
                 >
                   <TestimonialCard testimonial={t} />
                 </div>
